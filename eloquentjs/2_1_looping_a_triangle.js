@@ -1,9 +1,11 @@
 /**Draws a right triangle utilizing the += operator*/
 function drawTriangle(height) { 
     if (isNaN(height)) {
+        throw "Triangle height cannot be NaN";
         return;
     }
     if (height <= 0) {
+        throw "Triangle height cannot be less than zero";
         return;
     } 
     let tri = '';
@@ -19,9 +21,11 @@ function drawTriangle(height) {
 /**Draws a right triangle utilizing array join method*/
 function drawTriangleArrayJoin(height) { 
     if (isNaN(height)) {
+        throw "Triangle height cannot be NaN";
         return;
     }
     if (height <= 0) {
+        throw "Triangle height cannot be less than zero";
         return;
     } 
     let tri = [];
@@ -37,9 +41,11 @@ function drawTriangleArrayJoin(height) {
 /**Draws a right triangle utilizing combination of array join and repeat function*/
 function drawTriangleRepeat(height) { 
     if (isNaN(height)) {
+        throw "Triangle height cannot be NaN";
         return;
     }
     if (height <= 0) {
+        throw "Triangle height cannot be less than zero";
         return;
     } 
     let tri = [];
