@@ -1,15 +1,16 @@
-/**Draws a right triangle utilizing the += operator*/
+/**
+ *  Draws a right triangle utilizing the += operator
+ */
 function drawTriangle(height) { 
     if (isNaN(height)) {
         throw "Triangle height cannot be NaN";
-        return;
     }
     if (height <= 0) {
         throw "Triangle height cannot be zero or less";
-        return;
-    } 
-    let tri = '';
-    for (let i = 0; i <= height; i++) {
+    }
+
+    let tri = "\n#\n";
+    for (let i = 2; i <= height; i++) {
         for (let j = 0; j < i; j++) {
             tri += "#";
         }
@@ -18,18 +19,19 @@ function drawTriangle(height) {
     console.log(tri);
 }
 
-/**Draws a right triangle utilizing array join method*/
+/**
+ * Draws a right triangle utilizing array join method
+ */
 function drawTriangleArrayJoin(height) { 
     if (isNaN(height)) {
         throw "Triangle height cannot be NaN";
-        return;
     }
     if (height <= 0) {
         throw "Triangle height cannot be zero or less";
-        return;
-    } 
-    let tri = [];
-    for (let i = 0; i <= height; i++) {
+    }
+
+    const tri = ["\n","#","\n"];
+    for (let i = 2; i <= height; i++) {
         for (let j = 0; j < i; j++) {
             tri.push("#");
         }
@@ -38,18 +40,19 @@ function drawTriangleArrayJoin(height) {
     console.log(tri.join(''));
 }
 
-/**Draws a right triangle utilizing combination of array join and repeat function*/
+/**
+ * Draws a right triangle utilizing combination of array join and repeat function
+ */
 function drawTriangleRepeat(height) { 
     if (isNaN(height)) {
         throw "Triangle height cannot be NaN";
-        return;
     }
     if (height <= 0) {
         throw "Triangle height cannot be zero or less";
-        return;
-    } 
-    let tri = [];
-    for (let i = 0; i <= height; i++) {
+    }
+
+    const tri = ["\n","#","\n"];
+    for (let i = 2; i <= height; i++) {
         tri.push(('#').repeat(i))
         tri.push("\n");
     }
@@ -57,5 +60,5 @@ function drawTriangleRepeat(height) {
 }
 
 drawTriangle(7);
-//drawTriangleArrayJoin(7);
-//drawTriangleRepeat(7);
+drawTriangleArrayJoin(7);
+drawTriangleRepeat(7);
