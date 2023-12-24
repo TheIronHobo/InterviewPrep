@@ -5,7 +5,7 @@ function drawTriangle(height) {
         return;
     }
     if (height <= 0) {
-        throw "Triangle height cannot be less than zero";
+        throw "Triangle height cannot be zero or less";
         return;
     } 
     let tri = '';
@@ -25,7 +25,7 @@ function drawTriangleArrayJoin(height) {
         return;
     }
     if (height <= 0) {
-        throw "Triangle height cannot be less than zero";
+        throw "Triangle height cannot be zero or less";
         return;
     } 
     let tri = [];
@@ -45,7 +45,7 @@ function drawTriangleRepeat(height) {
         return;
     }
     if (height <= 0) {
-        throw "Triangle height cannot be less than zero";
+        throw "Triangle height cannot be zero or less";
         return;
     } 
     let tri = [];
