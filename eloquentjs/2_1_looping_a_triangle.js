@@ -1,5 +1,6 @@
 /**
- *  Draws a right triangle utilizing the += operator
+ * Draws a right triangle utilizing the += operator
+ * @param {*} height 
  */
 function drawTriangle(height) { 
     if (isNaN(height)) {
@@ -21,6 +22,7 @@ function drawTriangle(height) {
 
 /**
  * Draws a right triangle utilizing array join method
+ * @param {*} height 
  */
 function drawTriangleArrayJoin(height) { 
     if (isNaN(height)) {
@@ -42,6 +44,7 @@ function drawTriangleArrayJoin(height) {
 
 /**
  * Draws a right triangle utilizing combination of array join and repeat function
+ * @param {*} height 
  */
 function drawTriangleRepeat(height) { 
     if (isNaN(height)) {
