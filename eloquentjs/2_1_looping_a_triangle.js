@@ -1,7 +1,11 @@
 /**Draws a right triangle utilizing the += operator*/
 function drawTriangle(height) { 
-    if (Number.isNaN(height)) return;
-    if (height <= 0) return;
+    if (isNaN(height)) {
+        return;
+    }
+    if (height <= 0) {
+        return;
+    } 
     let tri = '';
     for (let i = 0; i <= height; i++) {
         for (let j = 0; j < i; j++) {
@@ -14,8 +18,12 @@ function drawTriangle(height) {
 
 /**Draws a right triangle utilizing array join method*/
 function drawTriangleArrayJoin(height) { 
-    if (Number.isNaN(height)) return;
-    if (height <= 0) return;
+    if (isNaN(height)) {
+        return;
+    }
+    if (height <= 0) {
+        return;
+    } 
     let tri = [];
     for (let i = 0; i <= height; i++) {
         for (let j = 0; j < i; j++) {
@@ -28,8 +36,12 @@ function drawTriangleArrayJoin(height) {
 
 /**Draws a right triangle utilizing combination of array join and repeat function*/
 function drawTriangleRepeat(height) { 
-    if (Number.isNaN(height)) return;
-    if (height <= 0) return;
+    if (isNaN(height)) {
+        return;
+    }
+    if (height <= 0) {
+        return;
+    } 
     let tri = [];
     for (let i = 0; i <= height; i++) {
         tri.push(('#').repeat(i))
