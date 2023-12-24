@@ -1,3 +1,4 @@
+/**Returns the minimum value between two numeric input values */
 function minimum(a,b = Infinity) {
     if (isNaN(a) || isNaN(b)) {
         throw "Minimum input cannot be NaN";
