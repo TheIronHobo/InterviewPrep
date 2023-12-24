@@ -1,3 +1,4 @@
+/**Tests if input digit is even and returns boolean*/
 function isEven(input) {
     if (isNaN(input)) {
         throw "isEven input cannot be NaN";
