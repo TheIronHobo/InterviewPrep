@@ -1,7 +1,7 @@
 /** Performs the FizzBuzz operation from 1 to iter(inclusive)*/
 function FizzBuzz(iter) {
-    if (Number.isNaN(iter)) {
-        throw "FizzBuzz input is NaN"
+    if (isNaN(iter)) {
+        throw "FizzBuzz input is NaN";
         return;
     }
     if (iter<=0) {
