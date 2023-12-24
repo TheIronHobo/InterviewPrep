@@ -11,10 +11,10 @@ function drawChessboard(width, height = width) {
         let output = '';
         for (let j = 0; j < width; j++) {
             let reverseRowPattern = (j%2 != i%2);
-            output += reverseRowPattern ? '⬛󠁼󠁼' : '⬜';
+            output += reverseRowPattern ? '⬜' : '⬛';
         }
         console.log(output);
     }
 }
 
-drawChessboard(8);
+drawChessboard(32);
