@@ -1,3 +1,8 @@
+/**
+ * Draws a console chessboard of specifed width and height
+ * @param {*} width 
+ * @param {*} height 
+ */
 function drawChessboard(width, height) {
     if (height === undefined) {
         height = width;
