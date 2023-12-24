@@ -1,5 +1,5 @@
 /** Performs the FizzBuzz operation from 1 to iter(inclusive)*/
-function FizzBuzz(iter) {
+function fizzBuzz(iter) {
     if (isNaN(iter)) {
         throw "FizzBuzz input is NaN";
         return;
@@ -23,4 +23,4 @@ function FizzBuzz(iter) {
     }
 }
 
-FizzBuzz(100);
+fizzBuzz(100);
