@@ -39,5 +39,5 @@ function drawTriangleRepeat(height) {
 }
 
 drawTriangle(7);
-drawTriangleArrayJoin(7);
-drawTriangleRepeat(7);
+//drawTriangleArrayJoin(7);
+//drawTriangleRepeat(7);
