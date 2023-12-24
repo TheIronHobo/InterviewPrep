@@ -29,5 +29,5 @@ function isEven(input) {
 let testSpan = 10;
 
 for (let i = -testSpan; i <= testSpan; i++) {
-    console.log(i+': ' + isEven(i));
+    console.log(i + ': ' + isEven(i));
 }
