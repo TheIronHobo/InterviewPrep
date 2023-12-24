@@ -1,25 +1,30 @@
-/** Performs the FizzBuzz operation from 1 to iter(inclusive)*/
+/** 
+ * Performs the FizzBuzz operation from 1 to iter(inclusive)
+ */
 function fizzBuzz(iter) {
     if (isNaN(iter)) {
-        throw "FizzBuzz input is NaN";
-        return;
+        throw "FizzBuzz input cannot be NaN";
     }
-    if (iter <= 0) {
-        throw "FizzBuzz input is less than zero";
-        return;
+    if (iter < 1) {
+        throw "FizzBuzz input cannot be less than one";
     }
+
     for (let i = 1; i <= iter; i++) {
-        let output = '';
-        if (i%3 === 0) {
-            output += "Fizz";
+        let divisByThree = i%3 === 0;
+        let divisByFive = i%5 === 0;
+    
+        if (divisByThree && divisByFive) {
+            console.log("FizzBuzz");
         }
-        if (i%5 === 0) {
-            output += "Buzz";
+        else if (divisByThree) {
+            console.log("Fizz");
         }
-        if (!output) {
-            output += i;
+        else if (divisByFive) {
+            console.log("Buzz");
         }
-        console.log(output);
+        else {
+            console.log(i);
+        }
     }
 }
 
