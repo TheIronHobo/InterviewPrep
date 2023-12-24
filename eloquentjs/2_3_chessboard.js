@@ -1,4 +1,4 @@
-function Chessboard(width, height = width) {
+function drawChessboard(width, height = width) {
     if (isNaN(width) || isNaN(height)) {
         throw "Chessboard dimensions cannot be NaN";
         return;
@@ -11,10 +11,10 @@ function Chessboard(width, height = width) {
         let output = '';
         for (let j = 0; j < width; j++) {
             let reverseRowPattern = (j%2 != i%2);
-            output += reverseRowPattern ? '#' : ' ';
+            output += reverseRowPattern ? ' ◻ ': ' ◼ ' ;
         }
         console.log(output);
     }
 }
 
-Chessboard(8);
+drawChessboard(8);
