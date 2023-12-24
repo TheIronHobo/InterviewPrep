@@ -1,16 +1,20 @@
-/**Returns the minimum value between two numeric input values */
+/**
+ * Returns the minimum value between two numeric input values
+ * @param {*} a 
+ * @param {*} b 
+ * @returns 
+ */
 function minimum(a,b = Infinity) {
     if (isNaN(a) || isNaN(b)) {
         throw "Minimum input cannot be NaN";
-        return;
     }
-    if (a < b) {
+
+    if (a <= b) {
         return a;
     }
-    if (b < a) {
+    else {
         return b;
     }
-    return a;
 }
 
 console.log(minimum(-5,10));
