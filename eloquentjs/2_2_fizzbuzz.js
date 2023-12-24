@@ -1,5 +1,6 @@
-/** 
+/**
  * Performs the FizzBuzz operation from 1 to iter(inclusive)
+ * @param {*} iter 
  */
 function fizzBuzz(iter) {
     if (isNaN(iter)) {
