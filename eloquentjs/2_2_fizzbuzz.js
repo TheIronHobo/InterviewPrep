@@ -4,7 +4,7 @@ function FizzBuzz(iter) {
         throw "FizzBuzz input is NaN";
         return;
     }
-    if (iter<=0) {
+    if (iter <= 0) {
         throw "FizzBuzz input is less than zero";
         return;
     }
