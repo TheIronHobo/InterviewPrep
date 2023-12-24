@@ -1,4 +1,4 @@
-/** Performs the FizzBuzz operation up to and including iter*/
+/** Performs the FizzBuzz operation from 1 to iter(inclusive)*/
 function FizzBuzz(iter) {
     if (Number.isNaN(iter)) {
         throw "FizzBuzz input is NaN"
