@@ -11,8 +11,7 @@ function minimum(a,b = Infinity) {
 
     if (a <= b) {
         return a;
-    }
-    else {
+    } else {
         return b;
     }
 }
