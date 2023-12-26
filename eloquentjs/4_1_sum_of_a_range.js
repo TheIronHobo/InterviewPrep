@@ -17,6 +17,9 @@ function range(a, b, step = 1) {
     if (isNaN(a) || isNaN(b) || isNaN(step)) {
         throw "invalid input";
     }
+    if ((Math.abs(a) === Infinity) || (Math.abs(b) === Infinity) || (Math.abs(step) === Infinity)) {
+        throw "invalid input";
+    }
     if (step === 0) {
         throw "step cannot be zero";
     }
