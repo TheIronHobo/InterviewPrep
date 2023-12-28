@@ -1,11 +1,11 @@
 /**
- * Converts an array or string to a list data structure
+ * Converts an array  to a list data structure
  * @param {*} inputArray 
  * @param {*} list 
  * @returns 
  */
 function arrayToList([...inputArray], list = { value: null, rest: null }) { 
-    if (inputArray.constructor.toString().indexOf("Array") === -1) { //this needs work
+    if (!Array.isArray(inputArray)) { //this needs work
         throw "input must be array";
     }
 
@@ -26,8 +26,7 @@ function arrayToList([...inputArray], list = { value: null, rest: null }) {
  * @returns 
  */
 function listToArray(inputList, arrayAccumulator = []) {
-
-    if ( !Object.keys(inputList).includes('value') || !Object.keys(inputList).includes('rest')) {
+    if (!Object.keys(inputList).includes('value') || !Object.keys(inputList).includes('rest')) {
         throw "input must be list data structure";
     }
     
@@ -41,15 +40,16 @@ function listToArray(inputList, arrayAccumulator = []) {
 }
 
 /**
- * Returns a version of the list with a prepended element
+ * Returns a copy of a list with a prepended element
  * @param {*} inputList 
  * @param {*} element 
  * @returns 
  */
 function prepend(inputList, element) {
-    if ( !Object.keys(inputList).includes('value') || !Object.keys(inputList).includes('rest')) {
+    if (!Object.keys(inputList).includes('value') || !Object.keys(inputList).includes('rest')) {
         throw "input must be list data structure";
     }
+
     return {
         value: element,
         rest: inputList
@@ -57,7 +57,7 @@ function prepend(inputList, element) {
 }
 
 /**
- * Returns the nth element of an array
+ * Returns the nth element of a list
  * @param {*} inputList 
  * @param {*} targetIndex 
  * @param {*} depth 
@@ -71,7 +71,7 @@ function nth(inputList, targetIndex, depth = 0) {
         throw "input must be list data structure";
     }
     if(depth === 0) {
-        if (isNaN(targetIndex) || targetIndex < 0 || Math.abs(targetIndex) === Infinity ) {
+        if (isNaN(targetIndex) || targetIndex < 0 || Math.abs(targetIndex) === Infinity) {
             throw "invalid target index";
         }
     }
@@ -79,16 +79,18 @@ function nth(inputList, targetIndex, depth = 0) {
         return inputList.value;
     }
 
-    return nth(inputList.rest, targetIndex, depth+1);
+    return nth(inputList.rest, targetIndex, depth + 1);
 }
 
 console.log('\n');
+
 let testArray = ['a', 'b', 'c'];
 console.log("testArray: " + testArray);
 console.log("Assigning variable testList to arrayToList(testArray)");
 let testList = arrayToList(testArray);
 console.log("testArray was not mutated by arrayToList: " + (testArray));
 console.log('\n');
+
 console.log("testlist has correct structure: " + JSON.stringify(testList));
 console.log("Assigning variable testArray to listToArray(testList)");
 testArray =  listToArray(testList);
@@ -108,9 +110,10 @@ console.log("nth: " + nth(testList,2));
 console.log("testList was not mutated by nth: " + JSON.stringify(testList))
 console.log('\n');
 
-// console.log("Testing listToArray guard clause: " + listToArray({ bananas: null, rest: null }));  // Error
- console.log("Testing arrayToList guard clause: " + JSON.stringify(arrayToList(2024)));  // Error
-// console.log("Testing nth guard clause 1: " + nth({bananas: true, rest: null},0));                  // Error
-// console.log("Testing nth guard clause 2: " + nth({value: true, rest: null},Infinity));           // Error
-// console.log("Testing nth guard clause 3: " +"nth: " + nth(testList,3));                                                          // Error
- //console.log("Testing prepend guard clause: " +"nth: " + prepend({bananas: true, rest: null},'j'));   
+// console.log("Testing listToArray guard clause: " + listToArray({ bananas: null, rest: null }));      // Error
+// console.log("Testing arrayToList guard clause: " + JSON.stringify(arrayToList(65)));                 // Error
+// console.log("Testing nth guard clause 1: " + nth({bananas: true, rest: null},0));                    // Error
+// console.log("Testing nth guard clause 2: " + nth({value: true, rest: null},Infinity));               // Error
+// console.log("Testing nth guard clause 3: " +"nth: " + nth(testList,3));                              // Error
+// console.log("Testing prepend guard clause: " +"nth: " + prepend({bananas: true, rest: null},'j'));   // Error  
+console.log('\n');
