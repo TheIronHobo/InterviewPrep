@@ -25,7 +25,7 @@ function reverseArrayInPlace(input) {
         throw "input must be array";
     }
 
-    for (let i = 0; i < input.length-1; i++) {
+    for (let i = 0; i < input.length - 1; i++) {
         input.splice(i,0,input.pop())
     }
 }
