@@ -4,16 +4,13 @@
  * @returns 
  */
 function reverseArray(input) {
-    if (input.constructor.toString().indexOf("Array") === -1) {
+    if (!Array.isArray(input)) {
         throw "input must be array";
-    }
-    if (input.length <= 0) {
-        return [];
     }
 
     output = [];
-    for (let i = input.length - 1; i >= 0; i--) {
-        output.push(input[i]);
+    for (let i = 0; i < input.length; i++) {
+        output.unshift(input[i]);
     }
     return output;
 }
@@ -24,23 +21,16 @@ function reverseArray(input) {
  * @returns 
  */
 function reverseArrayInPlace(input) {
-    if (input.constructor.toString().indexOf("Array") === -1) {
+    if (!Array.isArray(input)) {
         throw "input must be array";
     }
-    if (input.length <= 0) {
-        return [];
-    }
 
-    output = [];
-    while (input.length > 0) {
-        output.push(input.pop());
-    }
-    while (output.length > 0) {
-        input.push(output.shift());
+    for (let i = 0; i < input.length-1; i++) {
+        input.splice(i,0,input.pop())
     }
 }
 
-let testArray = [4,5,6];
+let testArray = [4,5,6,7,8];
 console.log("\n" + "Original array: " + testArray)
 console.log("Reversed Array: " + reverseArray(testArray));
 console.log("Original array is unmutated: "+ testArray);
