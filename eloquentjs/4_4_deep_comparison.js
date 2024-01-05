@@ -43,14 +43,23 @@ let isaacFavorites  = {favoriteNumber: 3, favoriteFruit: 'apple', favoriteDog: {
 let markFavorites   = {favoriteNumber: 3, favoriteFruit: 'apple', favoriteDog: {name: 'simon', breed: 'chihuahua'},     favoriteColors: ['red', 'blue']};
 
 console.log('\n');
+
 console.log("deepEqual(jimFavorites, jimFavorites)   | " + deepEqual(jimFavorites, jimFavorites));
 console.log("deepEqual(jimFavorites, janeFavorites)  | " + deepEqual(jimFavorites, janeFavorites));
 console.log("deepEqual(jimFavorites, markFavorites)  | " + deepEqual(jimFavorites, markFavorites));
 console.log("deepEqual(jimFavorites, isaacFavorites) | " + deepEqual(jimFavorites, isaacFavorites));
 console.log('\n');
+
 console.log("deepEqual('☕', '☕')                   | "  + deepEqual('☕', '☕'));
 console.log("deepEqual('☕', '⭐️')                   | "  + deepEqual('☕', '⭐️'));
 console.log("deepEqual(3, '☕')                      | "  + deepEqual(3, '☕'));
 console.log("deepEqual(3, '3')                       | "  + deepEqual(3, '3'));
 console.log('\n');
-console.log("deepEqual(null, jimFavorites)   | " + deepEqual(null, jimFavorites));
+
+console.log("deepEqual(null, jimFavorites)           | " + deepEqual(null, jimFavorites));
+console.log("deepEqual(undefined, jimFavorites)      | " + deepEqual(undefined, jimFavorites));
+console.log('\n');
+
+console.log("deepEqual(['a','b','c'], ['a','b','c']) | " + deepEqual(['a','b','c'], ['a','b','c']) );
+console.log("deepEqual(['a','b','c'], ['a','5','c']) | " + deepEqual(['a','b','c'], ['a','5','c']));
+console.log('\n');
