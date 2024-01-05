@@ -1,5 +1,6 @@
 /**
- * Returns the range of numbers from start up to (and including) end by incrementing by the value of step
+ * Returns the range of numbers from start to end by incrementing the value of step
+ * If the step process skips over end, end is not included
  * If only two parameters are provided the function defaults to a step size of positive 1
  * @param {*} start
  * @param {*} end
