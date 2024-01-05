@@ -1,3 +1,9 @@
+/**
+ * Performs deep comparison of two types and determines equality
+ * @param {*} itemA 
+ * @param {*} itemB 
+ * @returns 
+ */
 function deepEqual(itemA, itemB) {
     if(itemA === null && itemB === null) {
         return true;
