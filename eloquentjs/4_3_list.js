@@ -173,13 +173,13 @@ function getListLength(inputList) {
 }
 
 let testArray = ['a', 'b', 'c'];
-let testList = {value:"a",rest:{value:"b",rest:{value:"c",rest:null}}};
+let testList = {value:"a", rest:{value:"b", rest:{value:"c", rest:null}}};
 
 console.log("Recursion| Producing list from testArray: "    +   JSON.stringify(arrayToList(testArray)));
 console.log("Iteration| Producing list from testArray: "    +   JSON.stringify(arrayToListIterative(testArray)));
 console.log(`Recursion| Converting testList to array: `     +   JSON.stringify(listToArray(testList)));
 console.log(`Iteration| Converting testList to array: `     +   JSON.stringify(listToArrayIterative(testList)));
-console.log(`Producing list with prepended element '☕' `    +   JSON.stringify(prepend(testList,'☕')));
+console.log(`Producing list with prepended element '☕' `    +   JSON.stringify(prepend(testList, '☕')));
 console.log(`Returning index 2 element from list testList: `+   nth(testList,2));
 console.log("Get List Length "+ getListLength(testList));
 console.log("Is testList a list? " + isList(testList));
