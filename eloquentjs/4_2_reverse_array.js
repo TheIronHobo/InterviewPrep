@@ -9,8 +9,8 @@ function reverseArray(input) {
     }
 
     output = [];
-    for (let i = 0; i < input.length; i++) {
-        output.unshift(input[i]);
+    for (let i = input.length-1; i >= 0; i--) {
+        output.push(input[i]);
     }
     return output;
 }
@@ -25,8 +25,12 @@ function reverseArrayInPlace(input) {
         throw "input must be array";
     }
 
-    for (let i = 0; i < input.length - 1; i++) {
-        input.splice(i,0,input.pop())
+    let maxIndex = input.length-1;
+    let swap;
+    for (let i = 0; i < input.length/2; i++) {
+        swap = input[i];
+        input[i] = input[maxIndex-i]
+        input[maxIndex-i]=swap;
     }
 }
 
@@ -37,6 +41,7 @@ console.log("Original array is unmutated: "+ testArray);
 console.log("Performing in place array reversal...");
 reverseArrayInPlace(testArray);
 console.log("Original array has mutated: " + testArray);
+console.log('\n');
 
 // console.log("Guard clause test 1: ");
 // console.log(reverseArray(true));
