@@ -22,7 +22,7 @@ function deepEqual(itemA, itemB) {
             for (let i = 0; i < keysA.length; i++) {
                 let keyValuePairA = keysA[i];
                 let keyValuePairB = keysB[i];
-                if (deepEqual(keyValuePairA[0], keyValuePairB[0]) === false || deepEqual(keyValuePairA[1], keyValuePairB[1]) === false ) {
+                if (deepEqual(keyValuePairA[0], keyValuePairB[0]) === false || deepEqual(keyValuePairA[1], keyValuePairB[1]) === false) {
                     return false;
                 }
             }
