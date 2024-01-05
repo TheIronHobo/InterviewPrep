@@ -1,8 +1,8 @@
 /**
- * Returns the range of numbers from between start-end by incrementing by the value of step
+ * Returns the range of numbers from start up to (and including) end by incrementing by the value of step
  * If only two parameters are provided the function defaults to a step size of positive 1
- * @param {*} a 
- * @param {*} b 
+ * @param {*} start
+ * @param {*} end
  * @param {*} step 
  * @returns 
  */
@@ -19,22 +19,14 @@ function range(start, end, step = 1) {
     if (step === 0) {
         throw "step cannot be zero";
     }
-    if (start < end && Math.sign(step) === -1) {
-        return [];
-    }
 
-    let reverseLoopTerminationCondition = 1;
-    if (end < start) {
-        if (Math.sign(step) === 1) {
-            return [];
-        }
-        reverseLoopTerminationCondition = -1;
-    }
+    const stepSign = Math.sign(step)
 
     output = [];
-    for (let i = start; i*reverseLoopTerminationCondition <= end*reverseLoopTerminationCondition; i += step) {
+    for (let i = start; i*stepSign <= end*stepSign; i += step) {
         output.push(i);
     }
+
     return output;
 }
 
@@ -61,18 +53,29 @@ function sum(input) {
 }
 
 console.log("\n");
-console.log("Range Functon Testing");
-console.log("Lesser Start | Bigger End | No Step       " + range(1,5));     // [1,2,3,4,5]
-console.log("Lesser Start | Bigger End | Positive Step " + range(1,5,1));   // [1,2,3,4,5]
-console.log("Lesser Start | Bigger End | Negative Step " + range(1,5,-1));  // []
-console.log("Bigger Start | Lesser End | No Step       " + range(5,1));     // []
-console.log("Bigger Start | Lesser End | Positive Step " + range(5,1,1));   // []
-console.log("Bigger Start | Lesser End | Negative Step " + range(5,1,-1));  // [5,4,3,2,1]
+
+console.log("Range Functon Testing w/ default step");
+console.log("Lesser Start  | Greater End | No Step       " + JSON.stringify(range(1, 5)));     // [1,2,3,4,5]
+console.log("Greater Start | Lesser End  | No Step       " + JSON.stringify(range(5, 1)));     // []
+console.log("\n");
+
+console.log("Range Functon Testing w/ specified step");
+console.log("Lesser Start  | Greater End | Positive Step " + JSON.stringify(range(1, 5, 1)));   // [1,2,3,4,5]
+console.log("Lesser Start  | Greater End | Negative Step " + JSON.stringify(range(1, 5, -1)));  // []
+console.log("Greater Start | Lesser End  | Positive Step " + JSON.stringify(range(5, 1, 1)));   // []
+console.log("Greater Start | Lesser End  | Negative Step " + JSON.stringify(range(5, 1, -1)));  // [5,4,3,2,1]
+console.log("\n");
+
+let testStep = 0.75;
+console.log("Range Function Inclusivity Testing Utilizing testStep: " + testStep);
+console.log("Lesser Start  | Greater End | Positive Step " + JSON.stringify(range(1, 5, testStep)));   // [1,2,3,4,5]
+console.log("Lesser Start  | Greater End | Negative Step " + JSON.stringify(range(1, 5, -testStep)));  // []
+console.log("Greater Start | Lesser End  | Positive Step " + JSON.stringify(range(5, 1, testStep)));   // []
+console.log("Greater Start | Lesser End  | Negative Step " + JSON.stringify(range(5, 1, -testStep)));  // [5,4,3,2,1]
 console.log("\n");
 
 console.log("Sum Functon Testing");
-console.log(sum(range(1,10))); //55
-console.log("\n");
+console.log(sum(range(1, 10))); //55
 
 // console.log("Range Functon Error Conditions");
 // console.log("NaN parameter" + range('a',5));                 // Error
