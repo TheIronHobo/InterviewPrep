@@ -1,46 +1,109 @@
-/**
- * Converts an array to a list data structure
- * @param {*} inputArray 
- * @param {*} list 
- * @returns 
- */
-function arrayToListRecursive(inputArray, list = { value: null, rest: null }, depth = 0) { 
+function arrayToList(inputArray) { 
     if (!Array.isArray(inputArray)) { 
         throw "input must be array";
     }
 
-    if (depth > inputArray.length) {
-        return list.rest;
+    let currentIndex = inputArray.length-1;
+
+    function innerArrayToList(inputArray, list = null) {
+        if (currentIndex < 0) {
+            return list;
+        }
+        let arrayVal = inputArray[currentIndex];
+        currentIndex--;
+        return innerArrayToList(inputArray, { value: arrayVal, rest: list});
     }
 
-    prependInPlace(list, inputArray[inputArray.length-depth]);
-
-    // //list.value = inputArray.pop();
-    // list.value = inputArray;
-    // list.rest = structuredClone(list);
-
-    return arrayToListRecursive(inputArray, list, depth+1);
+    return innerArrayToList(inputArray);
 }
 
-/**
- * modifies the list to contain the prepended element
- * @param {*} inputList 
- * @param {*} element 
- * @returns 
- */
-function prependInPlace(inputList, element) {
+function arrayToListIterative(inputArray) { 
+    let listAcc = null;
+
+    for (let i = inputArray.length-1; i >= 0; i--) {
+        let element = inputArray[i];
+        listAcc = {
+            value: element,
+            rest:listAcc
+        };
+    }
+
+    return listAcc;
+}
+
+function listToArray(inputList) {
     if (!isList(inputList)) {
         throw "input must be list data structure";
     }
-    let listTemplate = { value: null, rest: null };
-    listTemplate.rest = inputList;
-    listTemplate.value = element;
-    inputList = listTemplate;
+    
+    let arrayAccumulator = [];
+
+    function innerListToArray(list) {
+        arrayAccumulator.push(list.value);
+        if (list.rest) {
+            innerListToArray(list.rest)
+        } 
+    }
+
+    innerListToArray(inputList);
+    return arrayAccumulator;
 }
 
+function listToArrayIterative(inputList) {
+    if (!isList(inputList)) {
+        throw "input must be list data structure";
+    }
 
-function huskListInPlace(input) {
+    let listLength = getListLength(inputList);
+    let acc = [];
+    let listBuffer = inputList;
+    for (let i = 0; i < listLength; i++) {
+        if(listBuffer.value !== null) {
+            acc.push(listBuffer.value);
+        }
+        listBuffer = listBuffer.rest;
+    }
+    return acc;
+}
 
+function prepend(inputList, element) {
+    if (!isList(inputList)) {
+        throw "input must be list data structure";
+    }
+    
+
+    return {
+        value: element,
+        rest: inputList
+    }
+}
+
+function nth(inputList, targetIndex) {
+    if (!isList(inputList)) {
+        throw "input must be list data structure";
+    }
+    if (isNaN(targetIndex) || targetIndex < 0 || Math.abs(targetIndex) === Infinity) {
+        throw "invalid target index";
+    }
+    
+    let currentIndex = 0;
+
+    function innerNth(list) {
+
+        if (list === null) {
+            throw "target index out of range"
+        }
+
+        if (currentIndex === targetIndex) {
+            return list.value;
+        }
+        else {
+            currentIndex++;
+            return innerNth(list.rest);
+        }
+    }
+
+    return innerNth(inputList)
 }
 
 function isList(inputList) {
@@ -50,167 +113,34 @@ function isList(inputList) {
     return true;
 }
 
-
-
-/**
- * Converts a list data structure to an array
- * @param {*} inputList 
- * @param {*} arrayAccumulator 
- * @returns 
- */
-function listToArrayRecursive(inputList, arrayAccumulator = []) {
+function getListLength(inputList) {
     if (!isList(inputList)) {
         throw "input must be list data structure";
     }
-    
-    arrayAccumulator.push(inputList.value);
 
-    if (inputList.rest) {
-        listToArrayRecursive(inputList.rest,arrayAccumulator)
-    }
-
-    return arrayAccumulator;
-}
-
-/**
- * Returns the nth element of a list
- * @param {*} inputList 
- * @param {*} targetIndex 
- * @param {*} depth 
- * @returns 
- */
-function nthRecursive(inputList, targetIndex, depth = 0) {
-    if (inputList === null) {
-        throw "target index out of range"
-    }
-    if (!isList(inputList)) {
-        throw "input must be list data structure";
-    }
-    if(depth === 0) {
-        if (isNaN(targetIndex) || targetIndex < 0 || Math.abs(targetIndex) === Infinity) {
-            throw "invalid target index";
+    let listLength = 0;
+    function innerListLength(list) {
+        if(list.value !== null) {
+            listLength++;
         }
-    }
-    if (depth === targetIndex) {
-        return inputList.value;
-    }
-
-    return nthRecursive(inputList.rest, targetIndex, depth + 1);
-}
-
-
-
-//-----------------------------------------------
-
-/**
- * Converts an array  to a list data structure
- * @param {*} inputArray 
- * @param {*} list 
- * @returns 
- */
-function arrayToListIterative([...inputArray], list = { value: null, rest: null }) { 
-    if (!Array.isArray(inputArray)) { //this needs work
-        throw "input must be array";
-    }
-
-    if (inputArray.length === 0) {
-        return list.rest;
-    }
-
-    list.value = inputArray.pop();
-    list.rest = structuredClone(list);
-
-    return arrayToListIterative(inputArray, list);
-}
-
-/**
- * Converts a list data structure to an array
- * @param {*} inputList 
- * @param {*} arrayAccumulator 
- * @returns 
- */
-function listToArrayIterative(inputList, arrayAccumulator = []) {
-    if (!isList(inputList)) {
-        throw "input must be list data structure";
-    }
-    
-    arrayAccumulator.push(inputList.value);
-
-    if (inputList.rest) {
-        listToArrayIterative(inputList.rest,arrayAccumulator)
-    }
-
-    return arrayAccumulator;
-}
-
-
-
-/**
- * Returns the nth element of a list
- * @param {*} inputList 
- * @param {*} targetIndex 
- * @param {*} depth 
- * @returns 
- */
-function nthIterative(inputList, targetIndex, depth = 0) {
-    if (inputList === null) {
-        throw "target index out of range"
-    }
-    if (!isList(inputList)) {
-        throw "input must be list data structure";
-    }
-    if(depth === 0) {
-        if (isNaN(targetIndex) || targetIndex < 0 || Math.abs(targetIndex) === Infinity) {
-            throw "invalid target index";
+        if(!list.rest) {
+            return listLength;
         }
-    }
-    if (depth === targetIndex) {
-        return inputList.value;
+        return innerListLength(list.rest);
     }
 
-    return nthIterative(inputList.rest, targetIndex, depth + 1);
+    return innerListLength(inputList);
 }
 
-// -------------------------------------------------------------------------------------------------------
-
-
-console.log('\n');
 let testArray = ['a', 'b', 'c'];
-let testListB = { value: 'b', rest: null };
-console.log("Testing prepend in place..." + JSON.stringify(prependInPlace(testListB,'a')));
-console.log("testListB: " + JSON.stringify(testListB));
-console.log("testArray: " + testArray);
-console.log("Assigning variable testList to arrayToListRecursive(testArray)");
-let testList = arrayToListRecursive(testArray);
-console.log("testlist has correct structure: " + JSON.stringify(testList));
-console.log("testArray was not mutated by arrayToListRecursive: " + (testArray));
-console.log('\n');
+let testList = {value:"a",rest:{value:"b",rest:{value:"c",rest:null}}};
 
-// console.log("testlist has correct structure: " + JSON.stringify(testList));
-// console.log("Assigning variable testArray to listToArray(testList)");
-// testArray =  listToArray(testList);
-// console.log("Array has correct structure: " + testArray);
-// console.log("Original list was not mutated by listToArray: "+ JSON.stringify(testList));
-// console.log('\n');
-
-// console.log("Testing prepend function");
-// console.log("Prepended test list: " + JSON.stringify(prepend(testList,'z')));
-// console.log("testList was not mutated by prepend: " + JSON.stringify(testList));
-// console.log('\n');
-
-// console.log("Testing nth function");
-// console.log("nth: " + nth(testList,0));
-// console.log("nth: " + nth(testList,1));
-// console.log("nth: " + nth(testList,2));
-// console.log("testList was not mutated by nth: " + JSON.stringify(testList))
-// console.log('\n');
-
-// console.log("Testing listToArray guard clause: " + listToArray({ bananas: null, rest: null }));      // Error
-// console.log("Testing arrayToList guard clause: " + JSON.stringify(arrayToList(65)));                 // Error
-// console.log("Testing nth guard clause 1: " + nth({bananas: true, rest: null},0));                    // Error
-// console.log("Testing nth guard clause 2: " + nth({value: true, rest: null},Infinity));               // Error
-// console.log("Testing nth guard clause 3: " +"nth: " + nth(testList,3));                              // Error
-// console.log("Testing prepend guard clause: " +"nth: " + prepend({bananas: true, rest: null},'j'));   // Error  
-// console.log('\n');
-
-//---------------------------------------------------
+console.log("Recursion| Producing list from testArray: "    +   JSON.stringify(arrayToList(testArray)));
+console.log("Iteration| Producing list from testArray: "    +   JSON.stringify(arrayToListIterative(testArray)));
+console.log(`Recursion| Converting testList to array: `     +   JSON.stringify(listToArray(testList)));
+console.log(`Iteration| Converting testList to array: `     +   JSON.stringify(listToArrayIterative(testList)));
+console.log(`Producing list with prepended element 'z' `    +   JSON.stringify(prepend(testList,'z')));
+console.log(`Returning index 2 element from list testList: `+   nth(testList,2));
+console.log("Get List Length "+ getListLength(testList));
+console.log("Is testList a list? " + isList(testList));
+console.log("Is mayonnaise a list? " + isList('mayonnaise'));
