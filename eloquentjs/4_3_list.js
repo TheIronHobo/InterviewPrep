@@ -7,20 +7,23 @@ function arrayToList(inputArray) {
     if (!Array.isArray(inputArray)) { 
         throw "input must be array";
     }
+    if (inputArray.length === 0) {
+        return {value: null, rest: null};
+    }
 
-    let currentIndex = inputArray.length-1;
+    const maxIndex = inputArray.length-1;
 
-    function innerArrayToList(inputArray, list = null) {
+    function innerArrayToList(currentIndex, list = null) {
         if (currentIndex < 0) {
             return list;
         }
 
         let arrayElement = inputArray[currentIndex];
-        currentIndex--;
-        return innerArrayToList(inputArray, { value: arrayElement, rest: list});
+
+        return innerArrayToList(currentIndex-1, {value: arrayElement, rest: list});
     }
 
-    return innerArrayToList(inputArray);
+    return innerArrayToList(maxIndex);
 }
 
 /**
@@ -32,14 +35,17 @@ function arrayToListIterative(inputArray) {
     if (!Array.isArray(inputArray)) { 
         throw "input must be array";
     }
+    if (inputArray.length === 0) {
+        return {value: null, rest: null};
+    }
 
     let listAcc = null;
 
     for (let i = inputArray.length - 1; i >= 0; i--) {
-        let element = inputArray[i];
+        const element = inputArray[i];
         listAcc = {
             value: element,
-            rest:listAcc
+            rest: listAcc
         };
     }
 
@@ -55,8 +61,11 @@ function listToArray(inputList) {
     if (!isList(inputList)) {
         throw "input must be list data structure";
     }
+    if (inputList.value === null) {
+        return [];
+    }
     
-    let arrayAccumulator = [];
+    const arrayAccumulator = [];
 
     function innerListToArray(list) {
         arrayAccumulator.push(list.value);
@@ -78,7 +87,10 @@ function listToArrayIterative(inputList) {
     if (!isList(inputList)) {
         throw "input must be list data structure";
     }
-
+    if (inputList.value === null) {
+        return [];
+    }
+    
     let listLength = getListLength(inputList);
     
     let acc = [];
@@ -174,11 +186,23 @@ function getListLength(inputList) {
 
 let testArray = ['a', 'b', 'c'];
 let testList = {value:"a", rest:{value:"b", rest:{value:"c", rest:null}}};
+let emptyArray = [];
+let emptyList = {value: null, rest: null};
 
+console.log('\n');
+console.log("Standard Testing");
 console.log("Recursion| Producing list from testArray: "    +   JSON.stringify(arrayToList(testArray)));
 console.log("Iteration| Producing list from testArray: "    +   JSON.stringify(arrayToListIterative(testArray)));
 console.log(`Recursion| Converting testList to array: `     +   JSON.stringify(listToArray(testList)));
 console.log(`Iteration| Converting testList to array: `     +   JSON.stringify(listToArrayIterative(testList)));
+console.log('\n');
+console.log("Empty/Null Testing");
+console.log("Recursion| Producing list from emptyArray: "    +   JSON.stringify(arrayToList(emptyArray)));
+console.log("Iteration| Producing list from emptyArray: "    +   JSON.stringify(arrayToListIterative(emptyArray)));
+console.log(`Recursion| Converting emptyList to array: `     +   JSON.stringify(listToArray(emptyList)));
+console.log(`Iteration| Converting emptyList to array: `     +   JSON.stringify(listToArrayIterative(emptyList)));
+console.log('\n');
+console.log("Helper Function Testing");
 console.log(`Producing list with prepended element '☕' `    +   JSON.stringify(prepend(testList, '☕')));
 console.log(`Returning index 2 element from list testList: `+   nth(testList,2));
 console.log("Get List Length "+ getListLength(testList));
