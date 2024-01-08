@@ -5,13 +5,13 @@
  * @returns 
  */
 function deepEqual(itemA, itemB) {
-    if(itemA === itemB) {
+    if (itemA === itemB) {
         return true;
     }
     if (typeof itemA !== typeof itemB) {
         return false;
     }
-    if(itemA === null || itemB === null) {
+    if (itemA === null || itemB === null) {
         return false;
     }
     if (typeof itemA !== 'object') {
@@ -29,16 +29,13 @@ function deepEqual(itemA, itemB) {
     entriesB.sort();
 
     for (let i = 0; i < entriesA.length; i++) {
-        let keyValuePairA = entriesA[i];
-        let keyValuePairB = entriesB[i];
+        const keyValuePairA = entriesA[i];
+        const keyValuePairB = entriesB[i];
 
-        let keysEqual = deepEqual(keyValuePairA[0], keyValuePairB[0]);
-        let valuesEqual = deepEqual(keyValuePairA[1], keyValuePairB[1])
+        const keysEqual = deepEqual(keyValuePairA[0], keyValuePairB[0]);
+        const valuesEqual = deepEqual(keyValuePairA[1], keyValuePairB[1])
 
-        if (!keysEqual) {
-            return false;
-        }
-        if (!valuesEqual) {
+        if (!keysEqual || !valuesEqual) {
             return false;
         }
     }
@@ -46,15 +43,15 @@ function deepEqual(itemA, itemB) {
     return true;
 }
 
-let jimFavorites    = {favoriteNumber: 3, favoriteFruit: 'apple', favoriteDog: {name: 'simon', breed: 'border collie'}, favoriteColors: ['red', 'blue']};
-let janeFavorites   = {favoriteNumber: 3, favoriteFruit: 'apple', favoriteDog: {name: 'simon', breed: 'border collie'}, favoriteColors: ['red', 'blue']}; // Same as jim
-let bobbyFavorites  = {favoriteFruit: 'apple', favoriteNumber: 3, favoriteDog: {name: 'simon', breed: 'border collie'}, favoriteColors: ['red', 'blue']}; // Same as jim but in different order
-let isaacFavorites  = {favoriteNumber: 3, favoriteFruit: 'apple', favoriteDog: {name: 'simon', breed: 'border collie'}, favoriteColors: ['red', 'orange']};
-let markFavorites   = {favoriteNumber: 3, favoriteFruit: 'apple', favoriteDog: {name: 'simon', breed: 'chihuahua'},     favoriteColors: ['red', 'blue']};
-let zachFavorites   = {favoriteNumber: 3, favoriteFruit: 'apple', favoriteDog: {name: 'simon', breed: 'border collie'}, favoriteColors: ['blue', 'red']};
+const jimFavorites    = {favoriteNumber: 3, favoriteFruit: 'apple', favoriteDog: {name: 'simon', breed: 'border collie'}, favoriteColors: ['red', 'blue']};
+const janeFavorites   = {favoriteNumber: 3, favoriteFruit: 'apple', favoriteDog: {name: 'simon', breed: 'border collie'}, favoriteColors: ['red', 'blue']}; // Same as jim
+const bobbyFavorites  = {favoriteFruit: 'apple', favoriteNumber: 3, favoriteDog: {name: 'simon', breed: 'border collie'}, favoriteColors: ['red', 'blue']}; // Same as jim but in different order
+const isaacFavorites  = {favoriteNumber: 3, favoriteFruit: 'apple', favoriteDog: {name: 'simon', breed: 'border collie'}, favoriteColors: ['red', 'orange']};
+const markFavorites   = {favoriteNumber: 3, favoriteFruit: 'apple', favoriteDog: {name: 'simon', breed: 'chihuahua'},     favoriteColors: ['red', 'blue']};
+const zachFavorites   = {favoriteNumber: 3, favoriteFruit: 'apple', favoriteDog: {name: 'simon', breed: 'border collie'}, favoriteColors: ['blue', 'red']};
 
-let emptyObjectOne = {};
-let emptyObjectTwo = {};
+const emptyObjectOne = {};
+const emptyObjectTwo = {};
 
 console.log('\n');
 console.log("deepEqual(jimFavorites, jimFavorites)         true | " + deepEqual(jimFavorites, jimFavorites));      // True - Same object
