@@ -31,11 +31,18 @@ function deepEqual(itemA, itemB) {
     for (let i = 0; i < entriesA.length; i++) {
         let keyValuePairA = entriesA[i];
         let keyValuePairB = entriesB[i];
-        if (!deepEqual(keyValuePairA[0], keyValuePairB[0]) || !deepEqual(keyValuePairA[1], keyValuePairB[1])) {
+
+        let keysEqual = deepEqual(keyValuePairA[0], keyValuePairB[0]);
+        let valuesEqual = deepEqual(keyValuePairA[1], keyValuePairB[1])
+
+        if (!keysEqual) {
+            return false;
+        }
+        if (!valuesEqual) {
             return false;
         }
     }
-    
+
     return true;
 }
 
