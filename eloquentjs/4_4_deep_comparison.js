@@ -1,5 +1,5 @@
 /**
- * Performs deep comparison of two types and determines equality
+ * Performs deep comparison of two inputs and determines equality
  * @param {*} itemA 
  * @param {*} itemB 
  * @returns 
@@ -18,12 +18,9 @@ function deepEqual(itemA, itemB) {
     if (typeof itemA === 'object') {
         let entriesA = Object.entries(itemA);
         let entriesB = Object.entries(itemB);
+
         if (entriesA.length !== entriesB.length) {
             return false;
-        }
-
-        if (entriesA.length === 0) {
-            throw "objects being compared have no enumerable data types";
         }
 
         entriesA.sort();
@@ -50,27 +47,32 @@ let isaacFavorites  = {favoriteNumber: 3, favoriteFruit: 'apple', favoriteDog: {
 let markFavorites   = {favoriteNumber: 3, favoriteFruit: 'apple', favoriteDog: {name: 'simon', breed: 'chihuahua'},     favoriteColors: ['red', 'blue']};
 let zachFavorites   = {favoriteNumber: 3, favoriteFruit: 'apple', favoriteDog: {name: 'simon', breed: 'border collie'}, favoriteColors: ['blue', 'red']};
 
+let emptyObjectOne = {};
+let emptyObjectTwo = {};
+
 console.log('\n');
-console.log("deepEqual(jimFavorites, jimFavorites)   | " + deepEqual(jimFavorites, jimFavorites));      // True - Same object
-console.log("deepEqual(jimFavorites, janeFavorites)  | " + deepEqual(jimFavorites, janeFavorites));     // True - Same values
-console.log("deepEqual(jimFavorites, bobbyFavorites) | " + deepEqual(jimFavorites, bobbyFavorites));    // True - Same values, different order
-console.log("deepEqual(jimFavorites, markFavorites)  | " + deepEqual(jimFavorites, markFavorites));     // False - Different sub object values
-console.log("deepEqual(jimFavorites, isaacFavorites) | " + deepEqual(jimFavorites, isaacFavorites));    // False - Different sub array values
-console.log("deepEqual(jimFavorites, zachFavorites)  | " + deepEqual(jimFavorites, zachFavorites));     // False - Different sub array order
+console.log("deepEqual(jimFavorites, jimFavorites)         true | " + deepEqual(jimFavorites, jimFavorites));      // True - Same object
+console.log("deepEqual(jimFavorites, janeFavorites)        true | " + deepEqual(jimFavorites, janeFavorites));     // True - Same values
+console.log("deepEqual(jimFavorites, bobbyFavorites)       true | " + deepEqual(jimFavorites, bobbyFavorites));    // True - Same values, different order
+console.log("deepEqual(jimFavorites, markFavorites)       false | " + deepEqual(jimFavorites, markFavorites));     // False - Different sub object values
+console.log("deepEqual(jimFavorites, isaacFavorites)      false | " + deepEqual(jimFavorites, isaacFavorites));    // False - Different sub array values
+console.log("deepEqual(jimFavorites, zachFavorites)       false | " + deepEqual(jimFavorites, zachFavorites));     // False - Different sub array order
 console.log('\n');
 
-console.log("deepEqual('☕', '☕')                   | "  + deepEqual('☕', '☕')); // True - Same values
-console.log("deepEqual('☕', '⭐️')                   | "  + deepEqual('☕', '⭐️')); // False - Different values
-console.log("deepEqual(3, '☕')                      | "  + deepEqual(3, '☕'));     // False - Different values
-console.log("deepEqual(3, '3')                       | "  + deepEqual(3, '3'));       // False - Different types
+console.log("deepEqual('☕', '☕')                        true  | "  + deepEqual('☕', '☕')); // True - Same values
+console.log("deepEqual('☕', '⭐️')                        false | "  + deepEqual('☕', '⭐️')); // False - Different values
+console.log("deepEqual(3, '☕')                           false | "  + deepEqual(3, '☕'));     // False - Different values
+console.log("deepEqual(3, '3')                            false | "  + deepEqual(3, '3'));       // False - Different types
 console.log('\n');
 
-console.log("deepEqual(null, {})                     | " + deepEqual(null, {}));        // False - Null guard clause test
-console.log("deepEqual({}, null)                     | " + deepEqual({}, null));        // False - Null guard clause test
-console.log("deepEqual(undefined, jimFavorites)      | " + deepEqual(undefined, {}));   // False - Undefined test
+console.log("deepEqual(null, {})                          false | " + deepEqual(null, {}));                         // False - Null guard clause test
+console.log("deepEqual({}, null)                          false | " + deepEqual({}, null));                         // False - Null guard clause test
+console.log("deepEqual(undefined, jimFavorites)           false | " + deepEqual(undefined, {}));                    // False - Undefined test
+console.log("deepEqual({}, {})                             true | " + deepEqual({}, {}));                           // True - Same stuff
+console.log("deepEqual(emptyOne, emptyTwo)                 true | " + deepEqual(emptyObjectOne, emptyObjectTwo));   // True - Same stuff
 console.log('\n');
 
-console.log("deepEqual(['a','b','c'], ['a','b','c']) | " + deepEqual(['a','b','c'], ['a','b','c']) );   // True - Same values
-console.log("deepEqual(['a','b','c'], ['a','c','b']) | " + deepEqual(['a','b','c'], ['a','c','b']) );   // False - Same values different order
-console.log("deepEqual(['a','b','c'], ['a','5','c']) | " + deepEqual(['a','b','c'], ['a','5','c']));    // False - Different values
+console.log("deepEqual(['a', 'b', 'c'], ['a', 'b', 'c'])   true | " + deepEqual(['a', 'b', 'c'], ['a', 'b', 'c']) );   // True - Same values
+console.log("deepEqual(['a', 'b', 'c'], ['a', 'c', 'b'])  false | " + deepEqual(['a', 'b', 'c'], ['a', 'c', 'b']) );   // False - Same values different order
+console.log("deepEqual(['a', 'b', 'c'], ['a', '5', 'c'])  false | " + deepEqual(['a', 'b', 'c'], ['a', '5', 'c']));    // False - Different values
 console.log('\n');
