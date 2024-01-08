@@ -14,30 +14,29 @@ function deepEqual(itemA, itemB) {
     if(itemA === null || itemB === null) {
         return false;
     }
-
-    if (typeof itemA === 'object') {
-        let entriesA = Object.entries(itemA);
-        let entriesB = Object.entries(itemB);
-
-        if (entriesA.length !== entriesB.length) {
-            return false;
-        }
-
-        entriesA.sort();
-        entriesB.sort(); 
-
-        for (let i = 0; i < entriesA.length; i++) {
-            let keyValuePairA = entriesA[i];
-            let keyValuePairB = entriesB[i];
-            if (!deepEqual(keyValuePairA[0], keyValuePairB[0]) || !deepEqual(keyValuePairA[1], keyValuePairB[1])) {
-                return false;
-            }
-        }
-
-        return true;
+    if (typeof itemA !== 'object') {
+        return false;
     }
 
-    return false;
+    let entriesA = Object.entries(itemA);
+    let entriesB = Object.entries(itemB);
+
+    if (entriesA.length !== entriesB.length) {
+        return false;
+    }
+
+    entriesA.sort();
+    entriesB.sort();
+
+    for (let i = 0; i < entriesA.length; i++) {
+        let keyValuePairA = entriesA[i];
+        let keyValuePairB = entriesB[i];
+        if (!deepEqual(keyValuePairA[0], keyValuePairB[0]) || !deepEqual(keyValuePairA[1], keyValuePairB[1])) {
+            return false;
+        }
+    }
+    
+    return true;
 }
 
 let jimFavorites    = {favoriteNumber: 3, favoriteFruit: 'apple', favoriteDog: {name: 'simon', breed: 'border collie'}, favoriteColors: ['red', 'blue']};
