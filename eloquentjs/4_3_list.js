@@ -20,7 +20,7 @@ function arrayToList(inputArray) {
 
         const arrayElement = inputArray[currentIndex];
 
-        return innerArrayToList(currentIndex-1, {value: arrayElement, rest: list});
+        return innerArrayToList(currentIndex - 1, {value: arrayElement, rest: list});
     }
 
     return innerArrayToList(maxIndex);
