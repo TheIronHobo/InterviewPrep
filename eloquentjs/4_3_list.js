@@ -18,7 +18,7 @@ function arrayToList(inputArray) {
             return list;
         }
 
-        let arrayElement = inputArray[currentIndex];
+        const arrayElement = inputArray[currentIndex];
 
         return innerArrayToList(currentIndex-1, {value: arrayElement, rest: list});
     }
@@ -61,18 +61,16 @@ function listToArray(inputList) {
     if (!isList(inputList)) {
         throw "input must be list data structure";
     }
-    if (inputList.value === null) {
-        return [];
-    }
 
-    const arrayAccumulator = [];
+    function innerListToArray(list, arrayAccumulator = []) {
+        if(list.value !== null) {
+            arrayAccumulator.push(list.value);
+        }
 
-    function innerListToArray(list) {
-        arrayAccumulator.push(list.value);
         if (list.rest === null) {
             return arrayAccumulator;
         } else {
-            return innerListToArray(list.rest);
+            return innerListToArray(list.rest, arrayAccumulator);
         }
     }
 
@@ -91,15 +89,12 @@ function listToArrayIterative(inputList) {
     if (inputList.value === null) {
         return [];
     }
-    
-    let listLength = getListLength(inputList);
-    
+
     let acc = [];
+
     let listBuffer = inputList;
-    for (let i = 0; i < listLength; i++) {
-        if (listBuffer.value !== null) {
-            acc.push(listBuffer.value);
-        }
+    while (listBuffer !== null) {
+        acc.push(listBuffer.value)
         listBuffer = listBuffer.rest;
     }
 
@@ -136,7 +131,7 @@ function nth(inputList, targetIndex) {
     if (isNaN(targetIndex) || targetIndex < 0 || Math.abs(targetIndex) === Infinity) {
         throw "invalid target index";
     }
-    if (targetIndex > getListLength(inputList)-1) {
+    if (targetIndex > getListLength(inputList) - 1) {
         throw "invalid target index";
     }
 
@@ -183,26 +178,30 @@ function getListLength(inputList) {
 
 let testArray = ['a', 'b', 'c'];
 let testList = {value:"a", rest:{value:"b", rest:{value:"c", rest:null}}};
+
 let emptyArray = [];
 let emptyList = {value: null, rest: null};
 
 console.log('\n');
+console.log("Test List: " + JSON.stringify(testList));
+console.log("Test Array: " + JSON.stringify(testArray));
+console.log('\n');
 console.log("Standard Testing");
-console.log("Recursion| Producing list from testArray: "    +   JSON.stringify(arrayToList(testArray)));
-console.log("Iteration| Producing list from testArray: "    +   JSON.stringify(arrayToListIterative(testArray)));
-console.log(`Recursion| Converting testList to array: `     +   JSON.stringify(listToArray(testList)));
-console.log(`Iteration| Converting testList to array: `     +   JSON.stringify(listToArrayIterative(testList)));
+console.log("Recursion| testArray to list: "    +   JSON.stringify(arrayToList(testArray)));
+console.log("Iteration| testArray to list: "    +   JSON.stringify(arrayToListIterative(testArray)));
+console.log("Recursion| testList to array: "     +   JSON.stringify(listToArray(testList)));
+console.log("Iteration| testList to array: "     +   JSON.stringify(listToArrayIterative(testList)));
 console.log('\n');
 console.log("Empty/Null Testing");
-console.log("Recursion| Producing list from emptyArray: "    +   JSON.stringify(arrayToList(emptyArray)));
-console.log("Iteration| Producing list from emptyArray: "    +   JSON.stringify(arrayToListIterative(emptyArray)));
-console.log(`Recursion| Converting emptyList to array: `     +   JSON.stringify(listToArray(emptyList)));
-console.log(`Iteration| Converting emptyList to array: `     +   JSON.stringify(listToArrayIterative(emptyList)));
+console.log("Recursion| emptyArray to list: "    +   JSON.stringify(arrayToList(emptyArray)));
+console.log("Iteration| emptyArray to list: "    +   JSON.stringify(arrayToListIterative(emptyArray)));
+console.log(`Recursion| emptyList to array: `     +   JSON.stringify(listToArray(emptyList)));
+console.log(`Iteration| emptyList to array: `     +   JSON.stringify(listToArrayIterative(emptyList)));
 console.log('\n');
 console.log("Helper Function Testing");
-console.log(`Producing list with prepended element '☕' `    +   JSON.stringify(prepend(testList, '☕')));
-console.log(`Returning index 2 element from list testList: `+   nth(testList,2));
-console.log("Get List Length "+ getListLength(testList));
+console.log(`testList with prepended element '☕' `    +   JSON.stringify(prepend(testList, '☕')));
+console.log(`Returning index 2 element from testList: `+   nth(testList,2));
+console.log("Get testList Length "+ getListLength(testList));
 console.log("Is testList a list? " + isList(testList));
-console.log("Is mayonnaise a list? " + isList('mayonnaise'));
+console.log(`Is 'mayonnaise' a list? ` + isList('mayonnaise'));
 // console.log("Attempting to retrieve out of bounds element from testList... " + (nth(testList,3))); //Error
