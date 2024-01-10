@@ -11,7 +11,7 @@ function arrayToList(inputArray) {
         return {value: null, rest: null};
     }
 
-    const maxIndex = inputArray.length-1;
+    const maxIndex = inputArray.length - 1;
 
     function innerArrayToList(currentIndex, list = null) {
         if (currentIndex < 0) {
