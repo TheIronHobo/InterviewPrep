@@ -203,13 +203,13 @@ console.log(`Iteration| emptyList to array: `     +   JSON.stringify(listToArray
 console.log('\n');
 console.log("Helper Function Testing");
 console.log(`testList with prepended element '☕' `    +   JSON.stringify(prepend(testList, '☕')));
-console.log(`Returning index 2 element from testList: `+   nth(testList,2));
+console.log(`Returning index 2 element from testList: `+   nth(testList, 2));
 console.log("Get testList Length "+ getListLength(testList));
 console.log("Is testList a list? " + isList(testList));
 console.log(`Is 'mayonnaise' a list? ` + isList('mayonnaise'));
 
-// console.log("Attempting to retrieve out of bounds element from testList... " + (nth(testList,3)));   //Error
-// console.log("Recursion| null to list: "    +   JSON.stringify(arrayToList(null)));                   //Error
-// console.log("Iteration| null to list: "    +   JSON.stringify(arrayToListIterative(null)));          //Error
-// console.log(`Recursion| null to array: `     +   JSON.stringify(listToArray(null)));                 //Error
-// console.log(`Iteration| null to array: `     +   JSON.stringify(listToArrayIterative(null)));        //Error
+// console.log("Attempting to retrieve out of bounds element from testList... " + (nth(testList,3)));   // Error
+// console.log("Recursion| null to list: "    +   JSON.stringify(arrayToList(null)));                   // Error
+// console.log("Iteration| null to list: "    +   JSON.stringify(arrayToListIterative(null)));          // Error
+// console.log(`Recursion| null to array: `     +   JSON.stringify(listToArray(null)));                 // Error
+// console.log(`Iteration| null to array: `     +   JSON.stringify(listToArrayIterative(null)));        / /Error
