@@ -149,6 +149,9 @@ function nth(inputList, targetIndex) {
  * @returns 
  */
 function isList(inputList) {
+    if (inputList === null) {
+        return false;
+    }
     const keys = Object.keys(inputList);
     return (keys.includes('value')) && (keys.includes('rest')) && (keys.length === 2);
 }
@@ -204,4 +207,9 @@ console.log(`Returning index 2 element from testList: `+   nth(testList,2));
 console.log("Get testList Length "+ getListLength(testList));
 console.log("Is testList a list? " + isList(testList));
 console.log(`Is 'mayonnaise' a list? ` + isList('mayonnaise'));
-// console.log("Attempting to retrieve out of bounds element from testList... " + (nth(testList,3))); //Error
+
+// console.log("Attempting to retrieve out of bounds element from testList... " + (nth(testList,3)));   //Error
+// console.log("Recursion| null to list: "    +   JSON.stringify(arrayToList(null)));                   //Error
+// console.log("Iteration| null to list: "    +   JSON.stringify(arrayToListIterative(null)));          //Error
+// console.log(`Recursion| null to array: `     +   JSON.stringify(listToArray(null)));                 //Error
+// console.log(`Iteration| null to array: `     +   JSON.stringify(listToArrayIterative(null)));        //Error
