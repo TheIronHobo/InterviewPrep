@@ -64,15 +64,16 @@ function listToArray(inputList) {
     if (inputList.value === null) {
         return [];
     }
-    
+
     const arrayAccumulator = [];
 
     function innerListToArray(list) {
         arrayAccumulator.push(list.value);
-        if (list.rest) {
-            innerListToArray(list.rest)
+        if (list.rest === null) {
+            return arrayAccumulator;
+        } else {
+            return innerListToArray(list.rest);
         }
-        return arrayAccumulator;
     }
 
     return innerListToArray(inputList);
@@ -96,7 +97,7 @@ function listToArrayIterative(inputList) {
     let acc = [];
     let listBuffer = inputList;
     for (let i = 0; i < listLength; i++) {
-        if(listBuffer.value !== null) {
+        if (listBuffer.value !== null) {
             acc.push(listBuffer.value);
         }
         listBuffer = listBuffer.rest;
@@ -135,14 +136,13 @@ function nth(inputList, targetIndex) {
     if (isNaN(targetIndex) || targetIndex < 0 || Math.abs(targetIndex) === Infinity) {
         throw "invalid target index";
     }
+    if (targetIndex > getListLength(inputList)-1) {
+        throw "invalid target index";
+    }
 
     listBuffer = inputList;
     for (let i = 0; i < targetIndex; i++) {
         listBuffer = listBuffer.rest;
-    }
-
-    if (listBuffer === null) {
-        throw "targetIndex out or range";
     }
 
     return listBuffer.value;
@@ -154,10 +154,8 @@ function nth(inputList, targetIndex) {
  * @returns 
  */
 function isList(inputList) {
-    if (!Object.keys(inputList).includes('value') || !Object.keys(inputList).includes('rest') || Object.keys(inputList).length !== 2) {
-        return false;
-    }
-    return true;
+    const keys = Object.keys(inputList);
+    return (keys.includes('value')) && (keys.includes('rest')) && (keys.length === 2);
 }
 
 /**
@@ -170,15 +168,14 @@ function getListLength(inputList) {
         throw "input must be list data structure";
     }
 
-    let listLength = 0;
-    function innerListLength(list) {
-        if(list.value !== null) {
+    function innerListLength(list, listLength = 0) {
+        if (list.value !== null) {
             listLength++;
         }
-        if(!list.rest) {
+        if (!list.rest) {
             return listLength;
         }
-        return innerListLength(list.rest);
+        return innerListLength(list.rest, listLength);
     }
 
     return innerListLength(inputList);
@@ -208,4 +205,4 @@ console.log(`Returning index 2 element from list testList: `+   nth(testList,2))
 console.log("Get List Length "+ getListLength(testList));
 console.log("Is testList a list? " + isList(testList));
 console.log("Is mayonnaise a list? " + isList('mayonnaise'));
-// console.log("Attempting to retrieve out of bounds element from testList... " + (nth(testList,3))); Error
+// console.log("Attempting to retrieve out of bounds element from testList... " + (nth(testList,3))); //Error
