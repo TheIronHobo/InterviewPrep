@@ -15,7 +15,7 @@ const errorCases = [
     null
 ];
 
-for (let i = 0; i < testCases.length; i++) {
-    flattenedElement = testCases[i].reduce((acc, currentArray) => acc.concat(currentArray))
-    console.log('\n' + JSON.stringify(testCases[i]) + " --> " + JSON.stringify(flattenedElement));
+for (element of testCases) {
+    flattenedElement = element.reduce((acc, currentArray) => acc.concat(currentArray))
+    console.log('\n' + JSON.stringify(element) + " --> " + JSON.stringify(flattenedElement));
 }
