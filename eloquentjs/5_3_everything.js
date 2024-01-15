@@ -59,6 +59,8 @@ for (let testArray of testCases) {
 
 if (passesAllTests) {
     console.log("Everything Some passes all tests! ✔️✨\n")
+} else {
+    console.log("Everything Some has failed some tests...");
 }
 
 console.log("Testing Everything Loop...\n");
@@ -81,4 +83,6 @@ for (let testArray of testCases) {
 
 if (passesAllTests) {
     console.log("Everything Loop passes all tests! ✔️✨\n")
+} else {
+    console.log("Everything Loop has failed some tests...");
 }
