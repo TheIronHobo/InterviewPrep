@@ -37,9 +37,9 @@ const testFunctionDictionary = {
     greaterThanTen: greaterThanTen,
     greaterThanNegativeFifty: greaterThanNegativeFifty,
     greaterThanFifty: greaterThanFifty,
-}
+};
 
-console.log("Testing Everything Some...\n");
+console.log("\nTesting Everything Some...\n");
 testEverythingFunction(everythingSome, testCases, testFunctionDictionary);
 
 console.log("Testing Everything Loop...\n");
@@ -53,10 +53,11 @@ function testEverythingFunction(everythingFunc, testCases, testFunctionDictionar
             const everythingResult = everythingFunc(testArray, func)
 
             if (everythingResult !== testArray.every(func)) {
-                failureStatements.push(`Failure #${failureStatements.length}: everything(${JSON.stringify(testArray)}, ${name} === ${everythingResult})`);
+                failureStatements.push(`Failure #${failureStatements.length}: everything(${JSON.stringify(testArray)}, ${name}) === ${everythingResult}`);
             }
         }
     }
+
     if (failureStatements.length === 0) {
         console.log("Everything function passed all tests! ✔️✨\n")
     } else {
@@ -67,7 +68,8 @@ function testEverythingFunction(everythingFunc, testCases, testFunctionDictionar
     }
 }
 
-// The following was used to test the tester!
+//The following was used to test the tester!
+
 // function everythingWrong(inputArray, testFunction) { 
 //     for (let element of inputArray) {
 //         if (!testFunction(element)) {
