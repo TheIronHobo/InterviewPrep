@@ -41,34 +41,25 @@ const testFunctionDictionary = {
 
 console.log("\nTesting Everything Some...\n");
 testEverythingFunction(everythingSome, testCases, testFunctionDictionary);
+console.log("Test complete\n");
 
 console.log("Testing Everything Loop...\n");
 testEverythingFunction(everythingLoop, testCases, testFunctionDictionary);
+console.log("Test complete\n");
 
 function testEverythingFunction(everythingFunc, testCases, testFunctionDictionary) {
-    let failureStatements = [];
-    
     for (let testArray of testCases) {
         for (const [name, func] of Object.entries(testFunctionDictionary)) {
             const everythingResult = everythingFunc(testArray, func)
 
             if (everythingResult !== testArray.every(func)) {
-                failureStatements.push(`Failure #${failureStatements.length}: everything(${JSON.stringify(testArray)}, ${name}) === ${everythingResult}`);
+                console.log(`${everythingFunc.name} has failed for ${name} w/ input ${JSON.stringify(testArray)}`)
             }
-        }
-    }
-
-    if (failureStatements.length === 0) {
-        console.log("Everything function passed all tests! ✔️✨\n")
-    } else {
-        console.log("Everything function has failed the following tests...");
-        for (let statement of failureStatements) {
-            console.log(statement);
         }
     }
 }
 
-//The following was used to test the tester!
+// The following was used to test the tester!
 
 // function everythingWrong(inputArray, testFunction) { 
 //     for (let element of inputArray) {
