@@ -39,11 +39,11 @@ const testFunctionDictionary = {
     greaterThanFifty: greaterThanFifty,
 };
 
-console.log("\nTesting Everything Some...\n");
+console.log("\nTesting Everything Some\n");
 testEverythingFunction(everythingSome, testCases, testFunctionDictionary);
 console.log("Test complete\n");
 
-console.log("Testing Everything Loop...\n");
+console.log("Testing Everything Loop\n");
 testEverythingFunction(everythingLoop, testCases, testFunctionDictionary);
 console.log("Test complete\n");
 
@@ -53,7 +53,10 @@ function testEverythingFunction(everythingFunc, testCases, testFunctionDictionar
             const everythingResult = everythingFunc(testArray, func)
 
             if (everythingResult !== testArray.every(func)) {
-                console.log(`${everythingFunc.name} has failed for ${name} w/ input ${JSON.stringify(testArray)}`)
+                console.log(`\n Failure: ${everythingFunc.name} | ${name}(${JSON.stringify(testArray)}, ${name}) === ${everythingResult}`)
+            }
+            else {
+                process.stdout.write('.'); // displays activity in console w/o trailing new line characters
             }
         }
     }
