@@ -7,7 +7,7 @@ const SCRIPTS = require('./bin/scripts.js');
  */
 function dominantWritingDirection(inputString) {
     matchingScriptGroups = countBy(inputString, j => characterScript(characterCode(j)));
-
+   // console.log("matchingScriptGroups.name.direction: " + JSON.stringify(matchingScriptGroups));
     writingDirectionGroups = countBy(matchingScriptGroups, j => j.name.direction);
 
     writingDirections = writingDirectionGroups.map(n => n.name);
@@ -46,36 +46,66 @@ function countBy(items, groupName) {
     return counts;
 }
 
-//console.log(dominantWritingDirection("ba亣gelﺏ"));
-
-
-// I should build a function that generates a random number somewhere in the entire unicode range
-// We build a list of objects that contain the random string and the correlating languages
-//we use a more ineffecient method to verify the veracity of the unicode characters?
-
-//get random sampling of different objects
-
 let testObject = {
     directions: ['ltr', 'rtl'],
     text: "ba亣gelﺏ",
 }
 
-// we generate 
-
-function testDominantWritingDirectionFunction(dominantWritingDirection) {
-
-    //get random script
-    //save writing direction, deposit into test object
-    //get random range within ranges of script
-    //get random number within the range
-    const randomIntegerInRange = (start, end) => Math.floor((end - start)*Math.random()) + start; // Intentionally end exclusive to match unicode range standards
-    
-    for(let i = 0; i < 12; i++) {
-        console.log(randomIntegerInRange(0,5));
-    }
-    //deposit the character code as string into test object
-    //give the dominant writing system the string and check its result matches the test object
-    //if not provide failure diagnostics
+function arrayEquality(a, b) {
+//
 }
 
-testDominantWritingDirectionFunction(dominantWritingDirection);
+function testDominantWritingDirectionFunction(dominantWritingDirection, numTests) {
+
+    const randomIntegerInRange = (start, end) => Math.floor(Math.random() * (end - start)) + start; // Intentionally end exclusive to match unicode ranges
+    const randomScript = () => SCRIPTS[Math.floor(Math.random() * SCRIPTS.length)];
+    const randomCodeFromScript = (script) => randomIntegerInRange(...script.ranges[Math.floor(Math.random() * script.ranges.length)]);
+
+    //console.log("ran" + JSON.stringify(randomScript));
+
+    function produceTestObject() {
+        let text = "";
+        let writingDirections = [];
+
+        for (let j = 0; j < 2; j++) {
+            let script = SCRIPTS[Math.floor(Math.random() * SCRIPTS.length)];
+            let code = randomCodeFromScript(script);
+            let direction = script.direction;
+
+            text += String.fromCharCode(code);
+
+            if (!writingDirections.includes(direction)) {
+                writingDirections.push(direction);
+            }
+        }
+
+        return {
+            text: text,
+            writingDirections: writingDirections,
+        }
+    }
+
+    for (let i = 0; i < numTests; i++) {
+        testObject = produceTestObject();
+        dominantWritingDirectionResult = dominantWritingDirection(testObject.text);
+    
+        console.log("\ntestObject.text: " + testObject.text);
+
+        console.log("\ntestObject.writingDirectons: " + JSON.stringify(testObject.writingDirections))
+        console.log("\nresult: " + JSON.stringify(dominantWritingDirectionResult));
+        console.log('\n');
+        if (dominantWritingDirectionResult !== testObject.writingDirections) { // This isnt how we check array equality!! Weird..
+            console.log(`\n FAILURE: ${testObject.text}`);
+        }
+        else {
+            console.log("wooooo");
+           // process.stdout.write('.');
+        }
+    }
+
+}
+
+//console.log("Dominant Writing Direction: " + dominantWritingDirection("䙃ݏ"));
+
+testDominantWritingDirectionFunction(dominantWritingDirection, 100);
+
