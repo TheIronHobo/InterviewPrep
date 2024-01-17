@@ -7,7 +7,9 @@ const SCRIPTS = require('./bin/scripts.js');
  */
 function dominantWritingDirection(inputString) {
     matchingScriptGroups = countBy(inputString, j => characterScript(characterCode(j)));
-   // console.log("matchingScriptGroups.name.direction: " + JSON.stringify(matchingScriptGroups));
+    //console.log("matchingScriptGroups.name.direction: " + JSON.stringify(matchingScriptGroups));
+    //if (matchingScriptGroups[0].name)
+    matchingScriptGroups = matchingScriptGroups.filter(j => j.name !== null);
     writingDirectionGroups = countBy(matchingScriptGroups, j => j.name.direction);
 
     writingDirections = writingDirectionGroups.map(n => n.name);
@@ -52,7 +54,64 @@ let testObject = {
 }
 
 function arrayEquality(a, b) {
-//
+    if (a == b) {
+        return true;
+    }
+    if (a.length !== b.length) {
+        return false
+    }
+
+    for (let i = 0; i < a.length; i++) {
+        if(a[i] !== b[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+/**
+ * Performs deep comparison of two inputs and determines equality
+ * @param {*} itemA 
+ * @param {*} itemB 
+ * @returns 
+ */
+function deepEqual(itemA, itemB) {
+    if (itemA === itemB) {
+        return true;
+    }
+    if (typeof itemA !== typeof itemB) {
+        return false;
+    }
+    if (itemA === null || itemB === null) {
+        return false;
+    }
+    if (typeof itemA !== 'object') {
+        return false;
+    }
+
+    let entriesA = Object.entries(itemA);
+    let entriesB = Object.entries(itemB);
+
+    if (entriesA.length !== entriesB.length) {
+        return false;
+    }
+
+    entriesA.sort();
+    entriesB.sort();
+
+    for (let i = 0; i < entriesA.length; i++) {
+        const keyValuePairA = entriesA[i];
+        const keyValuePairB = entriesB[i];
+
+        const keysEqual = deepEqual(keyValuePairA[0], keyValuePairB[0]);
+        const valuesEqual = deepEqual(keyValuePairA[1], keyValuePairB[1])
+
+        if (!keysEqual || !valuesEqual) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 function testDominantWritingDirectionFunction(dominantWritingDirection, numTests) {
@@ -73,8 +132,8 @@ function testDominantWritingDirectionFunction(dominantWritingDirection, numTests
             let direction = script.direction;
 
             text += String.fromCharCode(code);
-
-            if (!writingDirections.includes(direction)) {
+            
+            if (!writingDirections.includes(direction)) { //this is flawed
                 writingDirections.push(direction);
             }
         }
@@ -89,21 +148,23 @@ function testDominantWritingDirectionFunction(dominantWritingDirection, numTests
         testObject = produceTestObject();
         dominantWritingDirectionResult = dominantWritingDirection(testObject.text);
     
-        console.log("\ntestObject.text: " + testObject.text);
+        //console.log("\ntestObject.text: " + testObject.text);
 
-        console.log("\ntestObject.writingDirectons: " + JSON.stringify(testObject.writingDirections))
-        console.log("\nresult: " + JSON.stringify(dominantWritingDirectionResult));
-        console.log('\n');
-        if (dominantWritingDirectionResult !== testObject.writingDirections) { // This isnt how we check array equality!! Weird..
+        //if (!arrayEquality(dominantWritingDirectionResult.sort(), testObject.writingDirections.sort())) {
+        if (!deepEqual(dominantWritingDirectionResult.sort(), testObject.writingDirections.sort())) {
             console.log(`\n FAILURE: ${testObject.text}`);
+            console.log("testObject.writingDirectons: " + JSON.stringify(testObject.writingDirections.sort()))
+            console.log("result:                      " + JSON.stringify(dominantWritingDirectionResult.sort()));
+            console.log('');
         }
         else {
-            console.log("wooooo");
-           // process.stdout.write('.');
+          //  console.log("wooooo");
+        process.stdout.write('.');
         }
     }
 
 }
+
 
 //console.log("Dominant Writing Direction: " + dominantWritingDirection("䙃ݏ"));
 
