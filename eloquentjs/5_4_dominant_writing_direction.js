@@ -52,3 +52,5 @@ console.log(dominantWritingDirection("ba亣gelﺏ"));
 // I should build a function that generates a random number somewhere in the entire unicode range
 // We build a list of objects that contain the random string and the correlating languages
 //we use a more ineffecient method to verify the veracity of the unicode characters?
+
+//get random sampling of different objects
