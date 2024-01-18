@@ -5,23 +5,34 @@ const SCRIPTS = require('./bin/scripts.js');
  * @param {*} inputString 
  * @returns 
  */
-function dominantWritingDirection(inputString) {
-    matchingScriptGroups = countBy(inputString, j => characterScript(characterCode(j)));
-    //console.log("matchingScriptGroups.name.direction: " + JSON.stringify(matchingScriptGroups));
-    //if (matchingScriptGroups[0].name)
-    matchingScriptGroups = matchingScriptGroups.filter(j => j.name !== null);
-    writingDirectionGroups = countBy(matchingScriptGroups, j => j.name.direction);
+function dominantWritingDirection(input) {
+    let matchingScriptGroups = countBy(input, j => characterScript(characterCode(j)));
 
-    writingDirections = writingDirectionGroups.map(n => n.name);
+    matchingScriptGroups = matchingScriptGroups.filter(j => j.name !== null);
+
+    const writingDirectionGroups = countBy(matchingScriptGroups, j => j.name.direction);
+
+    const writingDirections = writingDirectionGroups.map(n => n.name);
 
     return writingDirections;
 }
 
-function characterCode(string) {
-    return string.codePointAt(0);
+
+/**
+ * Returns the character code of input character
+ * @param {*} input 
+ * @returns 
+ */
+function characterCode(input) {
+    return input.codePointAt(0);
 }
 
-// Helper function pulled from Eloquent-JS text
+/**
+ * Returns the script that corresponds to an input character code
+ * Helper function pulled from eloquent JS chapter 5
+ * @param {*} code 
+ * @returns 
+ */
 function characterScript(code) {
     for (let script of SCRIPTS) {
         if (script.ranges.some( ([from, to]) => {
@@ -33,7 +44,13 @@ function characterScript(code) {
     return null;
 }
 
-// Helper function pulled from Eloquent-JS text
+/**
+ * Moves through an iterable input and creates array of objects that name and count input items according to groupName
+ * Helper function pulled from eloquent JS chapter 5
+ * @param {*} items 
+ * @param {*} groupName 
+ * @returns 
+ */
 function countBy(items, groupName) {
     let counts = [];
     for (let item of items) {
@@ -48,15 +65,21 @@ function countBy(items, groupName) {
     return counts;
 }
 
-let testObject = {
-    directions: ['ltr', 'rtl'],
-    text: "ba亣gelﺏ",
-}
-
+/**
+ * Returns true if two arrays are the same or share identical contents
+ * @param {*} a 
+ * @param {*} b 
+ * @returns 
+ */
 function arrayEquality(a, b) {
-    if (a == b) {
+    if(!Array.isArray(a) || !Array.isArray(b)) {
+        throw "both inputs must be of type array";
+    }
+
+    if (a === b) {
         return true;
     }
+
     if (a.length !== b.length) {
         return false
     }
@@ -66,131 +89,36 @@ function arrayEquality(a, b) {
             return false;
         }
     }
-    return true;
-}
-
-/**
- * Performs deep comparison of two inputs and determines equality
- * @param {*} itemA 
- * @param {*} itemB 
- * @returns 
- */
-function deepEqual(itemA, itemB) {
-    if (itemA === itemB) {
-        return true;
-    }
-    if (typeof itemA !== typeof itemB) {
-        return false;
-    }
-    if (itemA === null || itemB === null) {
-        return false;
-    }
-    if (typeof itemA !== 'object') {
-        return false;
-    }
-
-    let entriesA = Object.entries(itemA);
-    let entriesB = Object.entries(itemB);
-
-    if (entriesA.length !== entriesB.length) {
-        return false;
-    }
-
-    entriesA.sort();
-    entriesB.sort();
-
-    for (let i = 0; i < entriesA.length; i++) {
-        const keyValuePairA = entriesA[i];
-        const keyValuePairB = entriesB[i];
-
-        const keysEqual = deepEqual(keyValuePairA[0], keyValuePairB[0]);
-        const valuesEqual = deepEqual(keyValuePairA[1], keyValuePairB[1])
-
-        if (!keysEqual || !valuesEqual) {
-            return false;
-        }
-    }
 
     return true;
 }
 
-function testDominantWritingDirectionFunction(dominantWritingDirection, numTests) {
+function testDominantWritingDirectionFunction(dominantWritingDirection) {    
+    console.log("\nTest commencing");
 
-    const randomIntegerInRange = (start, end) => Math.floor(Math.random() * (end - start)) + start; // Intentionally end exclusive to match unicode ranges
-    const randomScript = () => SCRIPTS[Math.floor(Math.random() * SCRIPTS.length)];
-    const randomCodeFromScript = (script) => randomIntegerInRange(...script.ranges[Math.floor(Math.random() * script.ranges.length)]);
-
-    //console.log("ran" + JSON.stringify(randomScript));
-
-    function produceTestObject() {
-        let text = "";
-        let writingDirections = [];
-
-        for (let j = 0; j < 2; j++) {
-            let script = SCRIPTS[Math.floor(Math.random() * SCRIPTS.length)];
-            let code = randomCodeFromScript(script);
-            let direction = script.direction;
-            console.log("TESTTESTTEST: " + direction);
-            text += String.fromCharCode(code);
-            
-        
-            if (!writingDirections.includes(direction)) {
-                writingDirections.push(direction);
-            }
-        
-            // for (dir of directions) {
-            //     if (!writingDirections.includes(dir)) { //this is flawed
-            //         writingDirections.push(dir);
-            //     }
-            // }
-        }
-
-        return {
-            text: text,
-            writingDirections: writingDirections,
-        }
-    }
-
-    for (let i = 0; i < numTests; i++) {
-        testObject = produceTestObject();
-        dominantWritingDirectionResult = dominantWritingDirection(testObject.text);
+    let latin = "meow";
+    let arabic = "مياو";
+    let mongolian = "᠓ᢄᡸᡁᡁ";
     
-        //console.log("\ntestObject.text: " + testObject.text);
+    let tests = [
+        [latin, ['ltr']],
+        [arabic, ['rtl']],
+        [mongolian, ['ttb']],
+        [latin + arabic, ['ltr', 'rtl']],
+        [latin + mongolian, ['ltr', 'ttb']],
+        [arabic + mongolian, ['rtl', 'ttb']],
+        [latin + arabic + mongolian, ['ltr', 'rtl', 'ttb']]
+    ];
 
-        //if (!arrayEquality(dominantWritingDirectionResult.sort(), testObject.writingDirections.sort())) {
-        if (!deepEqual(dominantWritingDirectionResult.sort(), testObject.writingDirections.sort())) {
-            console.log(`\n FAILURE: ${testObject.text}`);
-            console.log("testObject.writingDirectons: " + JSON.stringify(testObject.writingDirections.sort()))
-            console.log("result:                      " + JSON.stringify(dominantWritingDirectionResult.sort()));
-            console.log('');
-        }
-        else {
-          //  console.log("wooooo");
-        process.stdout.write('.');
+    for (test of tests) {
+        if (!arrayEquality(dominantWritingDirection(test[0]).sort(), test[1].sort())) {
+            console.log(`FAILURE: ${test[0]} | (${dominantWritingDirection(test[0])} !== ${test[1]})`);
+        } else {
+            process.stdout.write('.');
         }
     }
 
+    console.log("\nTest complete");
 }
 
-let testStringA = "meow meow meow"; // Just LTR
-let testStringB = "مياو مياو مياو"; // Just RTL 
-let testStringC = "миау мив миау"; // Just TTB
-
-let latin = "meow";
-let arabic = "مياو";
-let mongolian = "миау";
-
-let testsAndKeys = [
-    [latin, ['ltr']],
-    [arabic, ['rtl']],
-    [mongolian, ['ttb']],
-    [latin + arabic, ['ltr', 'rtl']],
-    [latin + mongolian, ['ltr', 'ttb']],
-    [arabic + mongolian, ['rtl', 'ttb']],
-    [arabic + arabic + mongolian, ['ltr', 'rtl', 'ttb']]
-];
-
-//console.log("Dominant Writing Direction: " + dominantWritingDirection("䙃ݏ"));
-
-testDominantWritingDirectionFunction(dominantWritingDirection, 100);
-
+testDominantWritingDirectionFunction(dominantWritingDirection);
