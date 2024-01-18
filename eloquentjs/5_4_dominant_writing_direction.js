@@ -130,12 +130,19 @@ function testDominantWritingDirectionFunction(dominantWritingDirection, numTests
             let script = SCRIPTS[Math.floor(Math.random() * SCRIPTS.length)];
             let code = randomCodeFromScript(script);
             let direction = script.direction;
-
+            console.log("TESTTESTTEST: " + direction);
             text += String.fromCharCode(code);
             
-            if (!writingDirections.includes(direction)) { //this is flawed
+        
+            if (!writingDirections.includes(direction)) {
                 writingDirections.push(direction);
             }
+        
+            // for (dir of directions) {
+            //     if (!writingDirections.includes(dir)) { //this is flawed
+            //         writingDirections.push(dir);
+            //     }
+            // }
         }
 
         return {
@@ -165,6 +172,23 @@ function testDominantWritingDirectionFunction(dominantWritingDirection, numTests
 
 }
 
+let testStringA = "meow meow meow"; // Just LTR
+let testStringB = "مياو مياو مياو"; // Just RTL 
+let testStringC = "миау мив миау"; // Just TTB
+
+let latin = "meow";
+let arabic = "مياو";
+let mongolian = "миау";
+
+let testsAndKeys = [
+    [latin, ['ltr']],
+    [arabic, ['rtl']],
+    [mongolian, ['ttb']],
+    [latin + arabic, ['ltr', 'rtl']],
+    [latin + mongolian, ['ltr', 'ttb']],
+    [arabic + mongolian, ['rtl', 'ttb']],
+    [arabic + arabic + mongolian, ['ltr', 'rtl', 'ttb']]
+];
 
 //console.log("Dominant Writing Direction: " + dominantWritingDirection("䙃ݏ"));
 
