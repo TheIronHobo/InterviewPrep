@@ -6,34 +6,30 @@ const SCRIPTS = require('./bin/scripts.js');
  * @returns 
  */
 function dominantWritingDirection(input) {
-    let matchingScriptGroups = countBy(input, j => characterScript(characterCode(j)));
-    
-    matchingScriptGroups = matchingScriptGroups.filter(j => j.name !== null);
+    let directionGroups = countBy(input, j => {
+        return characterScript(codeFromCharacter(j)).direction;//should we compress the character script and code from character into a single function?
+    });
 
-    const writingDirectionGroups = countBy(matchingScriptGroups, j => j.name.direction);
+    directionGroups.sort((a, b) => {
+        if (a.count < b.count || a.name === null) {
+            return 1;
+        }
+        if (a.count > b.count || b.name === null) {
+            return -1;
+        }
+        return 0;
+    });
 
-    const writingDirections = writingDirectionGroups.map(n => n.name);
-
-    return writingDirections;
-}
-
-
-/**
- * Returns the character code of input character
- * @param {*} input 
- * @returns 
- */
-function characterCode(input) {
-    return input.codePointAt(0);
+    return directionGroups[0].name;
 }
 
 /**
  * Returns the script that corresponds to an input character code
- * Helper function pulled from eloquent JS chapter 5
  * @param {*} code 
  * @returns 
  */
-function characterScript(code) {
+function scriptFromCharacter(input) {
+    const code = input.codePointAt(0);
     for (let script of SCRIPTS) {
         if (script.ranges.some( ([from, to]) => {
             return code >= from && code < to;
@@ -41,6 +37,7 @@ function characterScript(code) {
             return script;
         }
     }
+    console.log("NULL DETECTED: " + code)
     return null;
 }
 
@@ -98,20 +95,19 @@ function testDominantWritingDirectionFunction(dominantWritingDirection) {
 
     let latin = "meow";
     let arabic = "مياو";
-    let mongolian = "᠓ᢄᡸᡁᡁ";
+    let mongolian = "᠓ᢄ᠐ᡁᡁ" + String.fromCharCode(1212498701208712380712308);
     
     let tests = [
-        [latin, ['ltr']],
-        [arabic, ['rtl']],
-        [mongolian, ['ttb']],
-        [latin + arabic, ['ltr', 'rtl']],
-        [latin + mongolian, ['ltr', 'ttb']],
-        [arabic + mongolian, ['rtl', 'ttb']],
-        [latin + arabic + mongolian, ['ltr', 'rtl', 'ttb']]
+        [latin, 'ltr'],
+        [arabic, 'rtl'],
+        [mongolian, 'ttb'],
+        [latin + latin + arabic, 'ltr'],
+        [latin + arabic + arabic, 'rtl'],
+        [arabic + mongolian + mongolian, 'ttb']
     ];
 
     for (test of tests) {
-        if (!arrayEquality(dominantWritingDirection(test[0]).sort(), test[1].sort())) {
+        if (dominantWritingDirection(test[0]) !== test[1]) {
             console.log(`FAILURE: ${test[0]} | (${dominantWritingDirection(test[0])} !== ${test[1]})`);
         } else {
             process.stdout.write('.');
