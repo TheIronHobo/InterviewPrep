@@ -7,7 +7,7 @@ const SCRIPTS = require('./bin/scripts.js');
  */
 function dominantWritingDirection(input) {
     let matchingScriptGroups = countBy(input, j => characterScript(characterCode(j)));
-
+    
     matchingScriptGroups = matchingScriptGroups.filter(j => j.name !== null);
 
     const writingDirectionGroups = countBy(matchingScriptGroups, j => j.name.direction);
