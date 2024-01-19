@@ -1,22 +1,25 @@
 const SCRIPTS = require('./bin/scripts.js');
 
 /**
- * Returns a string indicating the dominant writing direction present in an input string
+ * Returns a string indicating the dominant writing direction present in an input string. 
+ * If there is a tie between dominant writing directions its resolved by alphabetic ordering of direction strings(ltr < rtl < ttb).
  * @param {*} inputString 
  * @returns 
  */
 function dominantWritingDirection(input) {
-    console.log("testA: " + input.length);
-    input = input.split().filter(b => scriptFromCharacter(b) !== null).join(); //This is not detecting our invalid character for some reason...
-    console.log("testB: " + input.length);
+    input = (input.split('').filter(b => scriptFromCharacter(b) !== null)).join(''); // filters out invalid characters
+
     let directionGroups = countBy(input, j => scriptFromCharacter(j).direction);
 
     directionGroups.sort((a, b) => {
-        if (a.count < b.count || a.name === null) {
+        if (a.count < b.count) {
             return 1;
         }
-        if (a.count > b.count || b.name === null) {
+        if (a.count > b.count) {
             return -1;
+        }
+        if (a.count === b.count) {
+            return a.name[0] > b.name[0] ? 1 : -1;
         }
         return 0;
     });
@@ -25,12 +28,14 @@ function dominantWritingDirection(input) {
 }
 
 /**
- * Returns the script that corresponds to an input character code
- * @param {*} code 
+ * Returns the script that corresponds to an input character.
+ * (Modifed helper function pulled from eloquent JS chapter 5)
+ * @param {*} input 
  * @returns 
  */
 function scriptFromCharacter(input) {
     const code = input.codePointAt(0);
+
     for (let script of SCRIPTS) {
         if (script.ranges.some(([from, to]) => {
             return code >= from && code < to;
@@ -51,6 +56,7 @@ function scriptFromCharacter(input) {
  */
 function countBy(items, groupName) {
     let counts = [];
+
     for (let item of items) {
         let name = groupName(item);
         let known = counts.findIndex(c => c.name === name);
@@ -60,46 +66,20 @@ function countBy(items, groupName) {
             counts[known].count++;
         }
     }
+
     return counts;
-}
-
-/**
- * Returns true if two arrays are the same or share identical contents
- * @param {*} a 
- * @param {*} b 
- * @returns 
- */
-function arrayEquality(a, b) {
-    if(!Array.isArray(a) || !Array.isArray(b)) {
-        throw "both inputs must be of type array";
-    }
-
-    if (a === b) {
-        return true;
-    }
-
-    if (a.length !== b.length) {
-        return false
-    }
-
-    for (let i = 0; i < a.length; i++) {
-        if(a[i] !== b[i]) {
-            return false;
-        }
-    }
-
-    return true;
 }
 
 function testDominantWritingDirectionFunction(dominantWritingDirection) {    
     console.log("\nTest commencing");
 
-    let invalidCharacter = String.fromCharCode(198234710982890432980430982897123489).repeat(12);
+    let invalidCharacter = String.fromCharCode(198234710982890432980430982897123489).repeat(124);
 
+    // all length 4
     let latin = "meow";
     let arabic = "مياو";
-    let mongolian = "᠓ᢄ᠐ᡁᡁ";
-    
+    let mongolian = "᠓ᢄ᠐ᡁ";
+
     let tests = [
         [latin, 'ltr'],
         [arabic, 'rtl'],
@@ -112,21 +92,27 @@ function testDominantWritingDirectionFunction(dominantWritingDirection) {
         [mongolian + invalidCharacter, 'ttb'],
         [latin + latin + arabic + invalidCharacter, 'ltr'],
         [latin + arabic + arabic + invalidCharacter, 'rtl'],
-        [arabic + mongolian + mongolian + invalidCharacter, 'ttb']
+        [arabic + mongolian + mongolian + invalidCharacter, 'ttb'],
+        [arabic + arabic + mongolian + mongolian, 'rtl'],
+        [mongolian + mongolian + arabic + arabic, 'rtl'],
+        [latin + latin + mongolian + mongolian, 'ltr'],
+        [mongolian + mongolian + latin + latin, 'ltr'],
+        [arabic + arabic + mongolian + mongolian + invalidCharacter, 'rtl'],
+        [mongolian + mongolian + arabic + arabic + invalidCharacter, 'rtl'],
+        [latin + latin + mongolian + mongolian + invalidCharacter, 'ltr'],
+        [mongolian + mongolian + latin + latin + invalidCharacter, 'ltr'],
+        // [mongolian + mongolian + latin + latin + invalidCharacter, 'rtl'], // failure
     ];
 
     for (test of tests) {
         if (dominantWritingDirection(test[0]) !== test[1]) {
-            console.log(`FAILURE: ${test[0]} | (${dominantWritingDirection(test[0])} !== ${test[1]})`);
+            console.log(`\nFAILURE: ${test[0]} | (${dominantWritingDirection(test[0])} !== ${test[1]})`);
         } else {
             process.stdout.write('.');
         }
     }
 
-    console.log("\nTest complete");
+    console.log("\nTest complete!");
 }
-
-let invalidCharacter = String.fromCharCode(198234710982890432980430982897123489).repeat(12);
-console.log(invalidCharacter + " | " + scriptFromCharacter(invalidCharacter))
 
 testDominantWritingDirectionFunction(dominantWritingDirection);
