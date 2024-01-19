@@ -1,14 +1,15 @@
 const SCRIPTS = require('./bin/scripts.js');
 
 /**
- * Returns an array of the writing directions present in a string of input text
+ * Returns a string indicating the dominant writing direction present in an input string
  * @param {*} inputString 
  * @returns 
  */
 function dominantWritingDirection(input) {
-    let directionGroups = countBy(input, j => {
-        return characterScript(codeFromCharacter(j)).direction;//should we compress the character script and code from character into a single function?
-    });
+    console.log("testA: " + input.length);
+    input = input.split().filter(b => scriptFromCharacter(b) !== null).join(); //This is not detecting our invalid character for some reason...
+    console.log("testB: " + input.length);
+    let directionGroups = countBy(input, j => scriptFromCharacter(j).direction);
 
     directionGroups.sort((a, b) => {
         if (a.count < b.count || a.name === null) {
@@ -31,19 +32,19 @@ function dominantWritingDirection(input) {
 function scriptFromCharacter(input) {
     const code = input.codePointAt(0);
     for (let script of SCRIPTS) {
-        if (script.ranges.some( ([from, to]) => {
+        if (script.ranges.some(([from, to]) => {
             return code >= from && code < to;
         })) {
             return script;
         }
     }
-    console.log("NULL DETECTED: " + code)
+
     return null;
 }
 
 /**
- * Moves through an iterable input and creates array of objects that name and count input items according to groupName
- * Helper function pulled from eloquent JS chapter 5
+ * Moves through an iterable input and creates array of objects that name and count input items by groupName.
+ * (Helper function pulled from eloquent JS chapter 5)
  * @param {*} items 
  * @param {*} groupName 
  * @returns 
@@ -93,9 +94,11 @@ function arrayEquality(a, b) {
 function testDominantWritingDirectionFunction(dominantWritingDirection) {    
     console.log("\nTest commencing");
 
+    let invalidCharacter = String.fromCharCode(198234710982890432980430982897123489).repeat(12);
+
     let latin = "meow";
     let arabic = "مياو";
-    let mongolian = "᠓ᢄ᠐ᡁᡁ" + String.fromCharCode(1212498701208712380712308);
+    let mongolian = "᠓ᢄ᠐ᡁᡁ";
     
     let tests = [
         [latin, 'ltr'],
@@ -103,7 +106,13 @@ function testDominantWritingDirectionFunction(dominantWritingDirection) {
         [mongolian, 'ttb'],
         [latin + latin + arabic, 'ltr'],
         [latin + arabic + arabic, 'rtl'],
-        [arabic + mongolian + mongolian, 'ttb']
+        [arabic + mongolian + mongolian, 'ttb'],
+        [latin + invalidCharacter, 'ltr'],
+        [arabic + invalidCharacter, 'rtl'],
+        [mongolian + invalidCharacter, 'ttb'],
+        [latin + latin + arabic + invalidCharacter, 'ltr'],
+        [latin + arabic + arabic + invalidCharacter, 'rtl'],
+        [arabic + mongolian + mongolian + invalidCharacter, 'ttb']
     ];
 
     for (test of tests) {
@@ -116,5 +125,8 @@ function testDominantWritingDirectionFunction(dominantWritingDirection) {
 
     console.log("\nTest complete");
 }
+
+let invalidCharacter = String.fromCharCode(198234710982890432980430982897123489).repeat(12);
+console.log(invalidCharacter + " | " + scriptFromCharacter(invalidCharacter))
 
 testDominantWritingDirectionFunction(dominantWritingDirection);
