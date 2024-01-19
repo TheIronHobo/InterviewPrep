@@ -106,7 +106,7 @@ function testDominantWritingDirectionFunction(dominantWritingDirection) {
 
     for (test of tests) {
         if (dominantWritingDirection(test[0]) !== test[1]) {
-            console.log(`\nFAILURE: ${test[0]} | (${dominantWritingDirection(test[0])} !== ${test[1]})`);
+            console.log(`\nFailure: ${test[0]} | (${dominantWritingDirection(test[0])} !== ${test[1]})`);
         } else {
             process.stdout.write('.');
         }
