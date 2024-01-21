@@ -7,21 +7,19 @@ const SCRIPTS = require('./bin/scripts.js');
  * @returns 
  */
 function dominantWritingDirection(input) {
-    input = (input.split('').filter(b => scriptFromCharacter(b) !== null)).join(''); // filters out invalid characters
+    // filters out invalid characters
+    input = (input.split('').filter(b => scriptFromCharacter(b) !== null)).join(''); 
 
     let directionGroups = countBy(input, j => scriptFromCharacter(j).direction);
 
     directionGroups.sort((a, b) => {
         if (a.count < b.count) {
             return 1;
-        }
-        if (a.count > b.count) {
+        } else if (a.count > b.count) {
             return -1;
-        }
-        if (a.count === b.count) {
+        } else {
             return a.name[0] > b.name[0] ? 1 : -1;
         }
-        return 0;
     });
 
     return directionGroups[0].name;
@@ -35,11 +33,10 @@ function dominantWritingDirection(input) {
  */
 function scriptFromCharacter(input) {
     const code = input.codePointAt(0);
+    const scriptContainsCode = (code, script) => script.ranges.some(([from, to]) => code >= from && code < to);
 
     for (let script of SCRIPTS) {
-        if (script.ranges.some(([from, to]) => {
-            return code >= from && code < to;
-        })) {
+        if (scriptContainsCode(code, script)) {
             return script;
         }
     }
