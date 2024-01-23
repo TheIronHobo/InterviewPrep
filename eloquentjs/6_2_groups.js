@@ -11,13 +11,15 @@ class Group {
         if (!this.has(item)) {
             this.set.push(item);
         } else {
-            console.log(`Set already includes item '${item}'`);
+            console.log(`Set already includes item '${item}!'`);
         }
     }
 
     delete(item) {
         if (this.has(item)) {
             this.set.splice(this.set.findIndex(j => j === item), 1);
+        } else {
+            console.log(`Set doesn't have '${item}'!`);
         }
     }
 
@@ -63,6 +65,10 @@ testGroup.display();
 
 console.log("\nDelete 6");
 testGroup.delete(6);
+testGroup.display();
+
+console.log("\nDelete 't'");
+testGroup.delete('t');
 testGroup.display();
 
 console.log("\nTest complete");
