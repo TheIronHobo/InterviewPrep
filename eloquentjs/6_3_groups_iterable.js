@@ -44,9 +44,9 @@ class Group {
             return {done: true}
         }
 
-        const output ={value: this.set[this.n], done : false};
+        const output = {value: this.set[this.n], done: false};
         this.n++;
-        
+
         return output;
     }
 
@@ -55,7 +55,7 @@ class Group {
     }
 }
 
-let test = [1, 2 ,3 ,4 ,'a'];
+let test = [1, 2, 3, 4 , 'a'];
 
 let testGroup = Group.from(test);
 
