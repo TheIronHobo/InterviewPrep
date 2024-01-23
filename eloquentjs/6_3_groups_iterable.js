@@ -43,8 +43,10 @@ class Group {
             this.n = 0;
             return {done: true}
         }
+
         const output ={value: this.set[this.n], done : false};
         this.n++;
+        
         return output;
     }
 
