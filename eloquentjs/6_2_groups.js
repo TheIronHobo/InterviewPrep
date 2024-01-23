@@ -39,7 +39,7 @@ class Group {
 
 }
 
-let test =[1,2,3,4,'a'];
+let test = [1, 2 ,3 ,4 ,'a'];
 
 let testGroup = Group.from(test);
 
