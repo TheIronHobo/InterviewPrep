@@ -21,6 +21,16 @@ class Group {
         }
     }
 
+    static from(inputArray) {
+        let output = new Group();
+
+        for (let element of inputArray) {
+            output.add(element);
+        }
+
+        return output;
+    }
+
     display() {
         console.log(JSON.stringify(this.set));
     }
@@ -29,20 +39,30 @@ class Group {
 
 let test =[1,2,3,4,'a'];
 
-let testGroup = new Group();
+let testGroup = Group.from(test);
 
-for (element of test) {
-    testGroup.add(element);
-}
-
+console.log("\nOriginal");
 testGroup.display();
 
+console.log("\nAdding '6'");
 testGroup.add('6');
-
 testGroup.display();
 
+console.log("\nAdding '6'");
 testGroup.add('6');
+testGroup.display();
 
+console.log("\nAdding 6");
+testGroup.add(6);
+testGroup.display();
+
+console.log("\nDelete 2");
 testGroup.delete(2);
-
 testGroup.display();
+
+
+console.log("\nDelete 6");
+testGroup.delete(6);
+testGroup.display();
+
+console.log("\nTest complete");
