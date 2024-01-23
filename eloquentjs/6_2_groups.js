@@ -4,7 +4,7 @@ class Group {
     }
 
     has(item) {
-        return this.set.includes(item) ? true : false;
+        return this.set.includes(item);
     }
 
     add(item) {
