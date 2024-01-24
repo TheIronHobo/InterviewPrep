@@ -18,3 +18,9 @@ Lemur.prototype[hasOwnPropertySymbol] = Object.prototype.hasOwnProperty;
 
 console.log(mikey[hasOwnPropertySymbol]("weight")); // true
 console.log(mikey[hasOwnPropertySymbol]("morals")); // false
+
+let map = {one: true, two: true, hasOwnProperty: true};
+
+
+Object.prototype[hasOwnPropertySymbol] = Object.hasOwnProperty;
+console.log(map[hasOwnPropertySymbol]("one")); // true
