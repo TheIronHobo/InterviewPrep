@@ -57,8 +57,7 @@ class Group {
     }
 
     [Symbol.iterator]() {
-        this.iterator = new GroupIterator();
-        return this.iterator[Symbol.iterator](this.set);
+        return new GroupIterator()[Symbol.iterator](this.set);
     }
 
     display() {
