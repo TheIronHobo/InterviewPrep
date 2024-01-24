@@ -9,7 +9,7 @@ const roads = [
   ];
   
 
-  function buildGraph(edges) {
+function buildGraph(edges) {
     let graph = Object.create(null);
 
     function addEdge(from, to) {
@@ -26,11 +26,6 @@ const roads = [
     }
     return graph;
 }
-
-const roadGraph = buildGraph(roads);
-
-console.log(roadGraph);
-
 
 class VillageState {
     constructor(place, parcels) {
@@ -52,6 +47,19 @@ class VillageState {
     }
 }
 
+VillageState.random = function(parcelCount = 5) {
+    let parcels = [];
+    for (let i = 0; i < parcelCount; i++) {
+        let address = randomPick(Object.keys(roadGraph));
+        let place;
+        do {
+            place = randomPick(Object.keys(roadGraph));
+        } while (place == address);
+        parcels.push({place, address})
+    }
+    return new VillageState("Post Office", parcels);
+}
+
 function runRobot(state, robot, memory) {
     for (let turn = 0;; turn++) {
         if (state.parcels.length == 0) {
@@ -64,3 +72,18 @@ function runRobot(state, robot, memory) {
         console.log(`Moved to ${action.direction}`);
     }
 }
+
+function randomRobot(state) {
+    console.log("staasasaste: " + JSON.stringify(state));
+    console.log("rooaaddd: " + JSON.stringify(roadGraph));
+    return {direction: randomPick(roadGraph[state.place])}
+}
+
+function randomPick(array) {
+    let choice = Math.floor(Math.random()*array.length);
+    return array[choice];
+}
+
+const roadGraph = buildGraph(roads);
+
+runRobot(VillageState.random(), randomRobot);
