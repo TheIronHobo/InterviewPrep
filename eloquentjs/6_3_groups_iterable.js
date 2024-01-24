@@ -1,12 +1,27 @@
-class Iterable {
-    [Symbol.iterator]() {
+class GroupIterator {
+    [Symbol.iterator](set) {
+        this.set = set;
         return this;
+    }
+
+    next() {
+        if(isNaN(this.n)){
+            this.n = 0;
+        }
+        if (this.n === this.set.length) {
+            this.n = 0;
+            return {done: true}
+        }
+
+        const output = {value: this.set[this.n], done: false};
+        this.n++;
+
+        return output;
     }
 }
 
-class Group extends Iterable {
+class Group {
     constructor() {
-        super();
         this.n = 0;
         this.set = [];
     }
@@ -41,16 +56,9 @@ class Group extends Iterable {
         return output;
     }
 
-    next() {
-        if (this.n === this.set.length) {
-            this.n = 0;
-            return {done: true}
-        }
-
-        const output = {value: this.set[this.n], done: false};
-        this.n++;
-
-        return output;
+    [Symbol.iterator]() {
+        this.iterator = new GroupIterator();
+        return this.iterator[Symbol.iterator](this.set);
     }
 
     display() {
