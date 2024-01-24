@@ -34,7 +34,7 @@ class VillageState {
     }
 
     move(destination) {
-        if(!roadGraph[this.place].includes(destination)) {
+        if(!roadGraph[this.place].includes(destination)) { //How do we 'pickup' parcels? I think when we do a move it changes the address of all parcels at the current address to the new address. Somehow...
             return this;
         } else {
             let parcels = this.parcels.map(p => {
@@ -67,7 +67,7 @@ function runRobot(state, robot, memory) {
             break;
         }
         let action = robot(state, memory);
-        state =  state.move(action.direction);
+        state =  state.move(action.direction); // if a parcel we're carrying is addressed to the location we move to, we remove it from the list of parcels
         memory = action.memory;
         console.log(`Moved to ${action.direction}`);
     }
@@ -79,6 +79,13 @@ function randomRobot(state) {
     return {direction: randomPick(roadGraph[state.place])}
 }
 
+function platoRobot(state,  memory = []) {
+    console.log("\nMy state is: " + JSON.stringify(state));
+    memory.push(state.place);
+    console.log("\nRoute since start: " + memory);
+    return {direction: randomPick(roadGraph[state.place]), memory: memory}
+}
+
 function randomPick(array) {
     let choice = Math.floor(Math.random()*array.length);
     return array[choice];
@@ -86,4 +93,10 @@ function randomPick(array) {
 
 const roadGraph = buildGraph(roads);
 
-runRobot(VillageState.random(), randomRobot);
+runRobot(VillageState.random(), platoRobot);
+
+let exampleState =  {
+    place:"Alice's House",
+    parcels:[{place:"Alice's House",address:"Bob's House"}]
+}
+// state is an object that contains the place we are located and a list of parcels we have on us
