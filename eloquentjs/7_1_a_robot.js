@@ -77,7 +77,7 @@ function runRobot(state, robot, memory) {
         state =  state.move(action.direction);
         memory = action.memory;
     }
-    throw `${robot.name} HAS EXCEED ${maxIter} ITERATIONS`;
+    throw `${robot.name} HAS EXCEEDED ${maxIter} ITERATIONS`;
 }
 
 function robotComparison(robots, numTests) {
