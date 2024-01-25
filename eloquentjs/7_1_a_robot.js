@@ -67,23 +67,65 @@ function runRobot(state, robot, memory) {
             break;
         }
         let action = robot(state, memory);
-        state =  state.move(action.direction); // if a parcel we're carrying is addressed to the location we move to, we remove it from the list of parcels
+        state =  state.move(action.direction);
         memory = action.memory;
         console.log(`Moved to ${action.direction}`);
     }
 }
 
 function randomRobot(state) {
-    console.log("staasasaste: " + JSON.stringify(state));
-    console.log("rooaaddd: " + JSON.stringify(roadGraph));
     return {direction: randomPick(roadGraph[state.place])}
 }
 
-function platoRobot(state,  memory = []) {
-    console.log("\nMy state is: " + JSON.stringify(state));
-    memory.push(state.place);
-    console.log("\nRoute since start: " + memory);
-    return {direction: randomPick(roadGraph[state.place]), memory: memory}
+function brutusBot(state,  memory = []) {
+    sucessfulRoutes = [];
+    console.log("State follow: ");
+    console.log(state);
+
+    if(memory.length === 0) {
+        breadthSearch(state, history = []);
+    }
+
+    function breadthSearch(internalState, history = [], depth = 0) {
+
+        history = [...history, internalState.place];
+        let nextPlaces = accessibleLocations(internalState);
+
+        if(depth >= 16) {
+            return;
+        }
+        if(internalState.parcels.length === 0) {
+            sucessfulRoutes.push(history);
+        }
+
+        for (let i = 0; i < nextPlaces.length; i++) {
+
+           let newInternalState = internalState.move(nextPlaces[i]);
+
+           breadthSearch(newInternalState, history, depth + 1);
+        }
+        
+    }
+
+    console.log("we having a good one eh?");
+    sucessfulRoutes.sort((a,b) => {
+        if(a.length > b.length) {
+            return 1;
+        } else if (a.length < b.length) {
+            return -1;
+        }
+        return 0;
+    });
+
+    console.log(`Best route: ` + sucessfulRoutes[0]);
+    console.log(`Best route length: ${sucessfulRoutes[0].length}`)
+    console.log(`Worst route: ` + sucessfulRoutes[sucessfulRoutes.length-1]);
+    throw "go home :)";
+
+    function accessibleLocations(state) {
+        return roadGraph[state.place]
+    }
+
 }
 
 function randomPick(array) {
@@ -93,10 +135,9 @@ function randomPick(array) {
 
 const roadGraph = buildGraph(roads);
 
-runRobot(VillageState.random(), platoRobot);
+runRobot(VillageState.random(2), brutusBot);
 
 let exampleState =  {
     place:"Alice's House",
     parcels:[{place:"Alice's House",address:"Bob's House"}]
 }
-// state is an object that contains the place we are located and a list of parcels we have on us
