@@ -1,19 +1,15 @@
 class GroupIterator {
-    [Symbol.iterator](set) {
-        this.set = set;
-        return this;
+    constructor(group) {
+        this.n = 0;
+        this.group = group;
     }
 
     next() {
-        if(isNaN(this.n)){
-            this.n = 0;
-        }
-        if (this.n === this.set.length) {
-            this.n = 0;
+        if (this.n === this.group.length) {
             return {done: true}
         }
 
-        const output = {value: this.set[this.n], done: false};
+        const output = {value: this.group[this.n], done: false};
         this.n++;
 
         return output;
@@ -22,27 +18,26 @@ class GroupIterator {
 
 class Group {
     constructor() {
-        this.n = 0;
-        this.set = [];
+        this.group = [];
     }
 
     has(item) {
-        return this.set.includes(item) ? true : false;
+        return this.group.includes(item) ? true : false;
     }
 
     add(item) {
         if (!this.has(item)) {
-            this.set.push(item);
+            this.group.push(item);
         } else {
-            console.log(`Set already includes item '${item}!'`);
+            console.log(`Group already includes item '${item}!'`);
         }
     }
 
     delete(item) {
         if (this.has(item)) {
-            this.set.splice(this.set.findIndex(j => j === item), 1);
+            this.group.splice(this.group.findIndex(j => j === item), 1);
         } else {
-            console.log(`Set doesn't have '${item}'!`);
+            console.log(`Group doesn't have '${item}'!`);
         }
     }
 
@@ -57,15 +52,15 @@ class Group {
     }
 
     [Symbol.iterator]() {
-        return new GroupIterator()[Symbol.iterator](this.set);
+        return new GroupIterator(this.group);
     }
 
     display() {
-        console.log(JSON.stringify(this.set));
+        console.log(JSON.stringify(this.group));
     }
 }
 
-let test = [1, 2, 3, 4 , 'a'];
+let test = [1, 2, 3, 4, 'a'];
 
 let testGroup = Group.from(test);
 
