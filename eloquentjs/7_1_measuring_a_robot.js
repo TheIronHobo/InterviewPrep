@@ -106,14 +106,12 @@ function runRobot(state, robot, memory) {
 }
 
 function robotComparison(robots, numTests, parcelCount) {
-    const results = [];
-
     const tests = [];
-
     for (let i = 0; i < numTests; i++) {
         tests.push(new VillageState.random(5))
     }
 
+    const results = [];
     for (robot of Object.keys(robots)) {
         console.log(`Testing: ${robot}`);
 
