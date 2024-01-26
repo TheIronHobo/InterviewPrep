@@ -105,10 +105,9 @@ function runRobot(state, robot, memory) {
     throw `${robot.name} HAS EXCEEDED ${maxIter} ITERATIONS`;
 }
 
-function robotComparison(robots, numTests) {
+function robotComparison(robots, numTests, parcelCount) {
     const results = [];
 
-    const parcelCount = 5;
     const tests = [];
 
     for (let i = 0; i < numTests; i++) {
@@ -178,9 +177,9 @@ const roboDictionary = {
     routeRobot: routeRobot
 }
 
-const results = robotComparison(roboDictionary, 100);
+const results = robotComparison(roboDictionary, 100, 5);
 
-results.sort((a,b) => {
+results.sort((a, b) => {
     if (a.averageSteps > b.averageSteps) {
         return 1;
     } else if (a.averageSteps < b.averageSteps){
