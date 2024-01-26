@@ -148,12 +148,14 @@ function routeRobot(state, memory = []) {
     if (memory.length === 0) {
       memory = mailRoute;
     }
+    
     return {direction: memory[0], memory: memory.slice(1)};
 }
 
 function goalOrientedRobot({place, parcels}, route = []) {
     if (route.length === 0) {
       const parcel = parcels[0];
+
       if (parcel.place !== place) {
         route = findRoute(roadGraph, place, parcel.place);
       } else {
