@@ -1,10 +1,135 @@
-const ROBOT_PROJECT = require('./7_1_a_robot.js');
+const roads = [
+    "Alice's House-Bob's House",   "Alice's House-Cabin",
+    "Alice's House-Post Office",   "Bob's House-Town Hall",
+    "Daria's House-Ernie's House", "Daria's House-Town Hall",
+    "Ernie's House-Grete's House", "Grete's House-Farm",
+    "Grete's House-Shop",          "Marketplace-Farm",
+    "Marketplace-Post Office",     "Marketplace-Shop",
+    "Marketplace-Town Hall",       "Shop-Town Hall"
+];
 
-const findRoute = ROBOT_PROJECT.findRoute;
-const randoBot = ROBOT_PROJECT.randoBot;
-const routeRobot = ROBOT_PROJECT.routeRobot;
-const goalOrientedRobot = ROBOT_PROJECT.goalOrientedRobot;
-const robotComparison = ROBOT_PROJECT.robotComparison;
+function buildGraph(edges) {
+    const graph = Object.create(null);
+
+    function addEdge(from, to) {
+        if (graph[from] == null) {
+            graph[from] = [to];
+        } else {
+            graph[from].push(to);
+        }
+    }
+
+    for (let [from, to] of edges.map(r => r.split('-'))) {
+        addEdge(from, to);
+        addEdge(to, from);
+    }
+
+    return graph;
+}
+
+class VillageState {
+    constructor(place, parcels) {
+        this.place = place;
+        this.parcels = parcels;
+    }
+
+    move(destination) {
+        if (!roadGraph[this.place].includes(destination)) {
+            return this;
+        } else {
+            const parcels = this.parcels.map(p => {
+                if (p.place !== this.place) return p;
+                return {place: destination, address: p.address};
+            }).filter(p => p.place !== p.address);
+
+            return new VillageState(destination, parcels);
+        }
+
+    }
+}
+
+VillageState.random = function(parcelCount = 5) {
+    const parcels = [];
+    for (let i = 0; i < parcelCount; i++) {
+        let address = randomPick(Object.keys(roadGraph));
+        let place;
+
+        do {
+            place = randomPick(Object.keys(roadGraph));
+        } while (place === address);
+
+        parcels.push({place, address})
+    }
+    return new VillageState("Post Office", parcels);
+}
+
+
+function randomPick(array) {
+    const choice = Math.floor(Math.random() * array.length);
+    return array[choice];
+}
+
+function findRoute(graph, from, to) {
+    const work = [{at: from, route: []}];
+
+    for (let i = 0; i < work.length; i++) {
+      const {at, route} = work[i];
+
+      for (let place of graph[at]) {
+        if (place === to) {
+            return route.concat(place);
+        }
+
+        if (!work.some(w => w.at === place)) {
+          work.push({at: place, route: route.concat(place)});
+        }
+      }
+    }
+}
+
+/**
+ * ----------- ROBOT SIMULATION/TESTING -----------
+ */
+
+function runRobot(state, robot, memory) {
+    const maxIter = 5000;
+    for (let turn = 0; turn < maxIter; turn++) {
+        if (state.parcels.length === 0) {
+            return turn;
+        }
+
+        let action = robot(state, memory);
+        state =  state.move(action.direction);
+        memory = action.memory;
+    }
+    throw `${robot.name} HAS EXCEEDED ${maxIter} ITERATIONS`;
+}
+
+function robotComparison(robots, numTests, parcelCount) {
+    const tests = [];
+    for (let i = 0; i < numTests; i++) {
+        tests.push(new VillageState.random(parcelCount))
+    }
+
+    const results = [];
+    for (robot of Object.keys(robots)) {
+        console.log(`Testing: ${robot}`);
+
+        let acc = 0;
+        const t0 = performance.now();
+        for (test of tests) {
+            acc += runRobot(test, robots[robot]);
+        }
+        const t1 = performance.now();
+        const delta = t1 - t0;
+        
+        results.push({name: robot, averageSteps: acc / numTests, averageMilliseconds: delta / numTests});
+    }
+
+    return results;
+}
+
+//------------------------------------
 
 function brutusBot(state,  memory = {route: [], relevantLocations: []}) {
     let bestRoute;
@@ -143,9 +268,6 @@ function goalOrientedButLovesHorsesRobot({place, parcels}, memory = {route: [], 
 }
 
 let roboDictionary = {
-    randoBot: randoBot,
-    routeRobot: routeRobot,
-    goalOrientedRobot: goalOrientedRobot,
     goalOrientedButLovesHorsesRobot: goalOrientedButLovesHorsesRobot,
     brutusBot: brutusBot,
 }
