@@ -92,7 +92,7 @@ function findRoute(graph, from, to) {
  */
 
 function runRobot(state, robot, memory) {
-    const maxIter = 500;
+    const maxIter = 5000;
     for (let turn = 0; turn < maxIter; turn++) {
         if (state.parcels.length === 0) {
             return turn;
