@@ -162,6 +162,7 @@ function goalOrientedRobot({place, parcels}, route = []) {
         route = findRoute(roadGraph, place, parcel.address);
       }
     }
+    
     return {direction: route[0], memory: route.slice(1)};
 }
 
