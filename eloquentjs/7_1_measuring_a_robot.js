@@ -108,7 +108,7 @@ function runRobot(state, robot, memory) {
 function robotComparison(robots, numTests, parcelCount) {
     const tests = [];
     for (let i = 0; i < numTests; i++) {
-        tests.push(new VillageState.random(5))
+        tests.push(new VillageState.random(parcelCount))
     }
 
     const results = [];
