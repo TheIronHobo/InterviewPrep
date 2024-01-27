@@ -208,8 +208,8 @@ function brutusBot(state,  memory = {route: []}) {
             return;
         } else if (history.length >= 2) {
             let currentLocation = internalState.place;
-            let lastLocation = history[history.length-1];
-            let secondToLastLocation = history[history.length-2];
+            let lastLocation = history[history.length - 1];
+            let secondToLastLocation = history[history.length - 2];
 
             const uselesslyBacktracking = !relevantLocations.includes(lastLocation) && (secondToLastLocation === currentLocation);
             if (uselesslyBacktracking) {
@@ -287,7 +287,7 @@ function thoughtfulPickupDropoffBot({place, parcels}, route = []) {
 }
 
 /**
- * Prioritizes doing the closest avaialble action (pickup or delivery)
+ * Prioritizes doing the closest available action (pickup or delivery)
  */
 function closestActionBot({place, parcels}, route = []) {
     if (route.length === 0) {
@@ -308,7 +308,7 @@ function closestActionBot({place, parcels}, route = []) {
             possibleRoutes.push(findRoute(roadGraph, place, parcelLocation))
         }
       
-        possibleRoutes.sort((a,b) => {
+        possibleRoutes.sort((a, b) => {
             if (a.length > b.length) {
                 return 1;
             } else if(a.length < b.length) {
@@ -375,7 +375,7 @@ function pollBot(state, route = []) {
     let pollResults = countBy(poll, j => j)
 
     pollResults.sort((a, b) => {
-        if(a.count < b.count) {
+        if (a.count < b.count) {
             return 1;
         } else if (a.count > b.count){
             return -1;
@@ -412,3 +412,52 @@ results.sort((a, b) => {
 });
 
 console.log(results);
+
+/*
+[
+  {
+    name: 'brutusBot',
+    averageSteps: 11.44,
+    averageMilliseconds: 35.205591000000005
+  },
+  {
+    name: 'thoughtfulPickupDropoffBot',
+    averageSteps: 11.5,
+    averageMilliseconds: 0.040048000000001596
+  },
+  {
+    name: 'closestActionBot',
+    averageSteps: 11.6,
+    averageMilliseconds: 0.05564600000000155
+  },
+  {
+    name: 'pollBot',
+    averageSteps: 13.15,
+    averageMilliseconds: 83.222148
+  },
+  {
+    name: 'pickupDropoffBot',
+    averageSteps: 13.39,
+    averageMilliseconds: 0.01863800000000083
+  },
+  {
+    name: 'goalOrientedBot',
+    averageSteps: 14.33,
+    averageMilliseconds: 0.04005600000000001
+  },
+    name: 'goalOrientedButLovesHorsesBot',
+    averageSteps: 15.16,
+    averageMilliseconds: 0.042288
+  },
+  {
+    name: 'routeBot',
+    averageSteps: 18.13,
+    averageMilliseconds: 0.028542000000000022
+  },
+  {
+    name: 'randoBot',
+    averageSteps: 71.92,
+    averageMilliseconds: 0.04459399999999995
+  }
+]
+*/
