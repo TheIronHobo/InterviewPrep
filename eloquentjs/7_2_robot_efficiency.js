@@ -129,7 +129,9 @@ function robotComparison(robots, numTests, parcelCount) {
     return results;
 }
 
-//--------------------------zooooooo
+/**
+ * ----------- ROBOT ZOO -----------
+ */
 
 function randoBot(state) {
     return {direction: randomPick(roadGraph[state.place])}
@@ -166,59 +168,55 @@ function goalOrientedBot({place, parcels}, route = []) {
 
 function brutusBot(state,  memory = {route: [], relevantLocations: []}) {
     let bestRoute;
-
-    if (memory.relevantLocations.length === 0) { //I think we cant turn this into one big callback function with filter and mapping
-        for ({place, address} of state.parcels) {
-            if (!memory.relevantLocations.includes(place)) {
-                memory.relevantLocations.push(place);
-            }
-            if (!memory.relevantLocations.includes(address)) {
-                memory.relevantLocations.push(address);
-            }
-        }
-    }
+    let relevantLocations = [];
+    let shortestRouteLengthEst = Infinity;
 
     if (memory.route.length === 0) {
+
+        shortestRouteLengthEst = runRobot(state, thoughtfulPickupDropoffBot) + 1;
+
+        if (relevantLocations.length === 0) { 
+            for ({place, address} of state.parcels) {
+                if (!relevantLocations.includes(place)) {
+                    relevantLocations.push(place);
+                }
+                if (!relevantLocations.includes(address)) {
+                    relevantLocations.push(address);
+                }
+            }
+        }
+
         bruteSearch(state, history = []);
         memory.route = bestRoute;
         memory.route.slice(1);
     }
 
-    function bruteSearch(internalState, history = [], depth = 0) { //We might be able to git rid of depth by just emasuring the history length
+    function bruteSearch(internalState, history = []) {
         history = [...history, internalState.place];
-        let nextPlaces = accessibleLocations(internalState, roadGraph);
+        let nextPlaces = roadGraph[internalState.place];
 
         if (bestRoute !== undefined && history.length >= bestRoute.length) {
             return;
-        }
-        // guess of approximate max length of shortest route
-        if (depth >= roads.length * 2 + 1) { 
+        } else if (history.length > shortestRouteLengthEst) { 
             return;
-        }
-        if (internalState.parcels.length === 0) {
+        } else if (internalState.parcels.length === 0) {
             bestRoute = history;
             return;
-        }
-        if (history.length >= 3) {
+        } else if (history.length >= 3) {
             let currentLocation = history[history.length-1]
             let lastLocation = history[history.length-2];
             let secondToLastLocation = history[history.length-3];
 
-            const uselesslyBacktracking = !memory.relevantLocations.includes(lastLocation) && (secondToLastLocation === currentLocation);
+            const uselesslyBacktracking = !relevantLocations.includes(lastLocation) && (secondToLastLocation === currentLocation);
             if (uselesslyBacktracking) {
                 return;
             }
         }
 
-        for (let i = 0; i < nextPlaces.length; i++) {
-           let newInternalState = internalState.move(nextPlaces[i]);
-           bruteSearch(newInternalState, history, depth + 1);
+        for (place of nextPlaces) {
+            bruteSearch(internalState.move(place), history);
         }
     }
-
-    function accessibleLocations(state, graph) {
-        return graph[state.place]
-    }    
 
     return {
         direction: memory.route[0],
@@ -230,19 +228,17 @@ function brutusBot(state,  memory = {route: [], relevantLocations: []}) {
 function pickupDropoffBot({place, parcels}, route = []) {
     if (route.length === 0) {
         unattainedParcels = parcels.filter(j => j.place !== place);
+
         if (unattainedParcels.length !== 0) {
             route = findRoute(roadGraph, place, unattainedParcels[0].place);
-            return {direction: route[0], memory: route.slice(1)};
-        }
-
-        let parcel = parcels[0];
-
-        if (parcel.place !== place) {
-            route = findRoute(roadGraph, place, parcel.place);
+            //return {direction: route[0], memory: route.slice(1)};
+        } else if (parcels[0].place !== place) {
+            route = findRoute(roadGraph, place, parcels[0].place);
         } else {
-            route = findRoute(roadGraph, place, parcel.address);
+            route = findRoute(roadGraph, place, parcels[0].address);
         }
     }
+
     return {direction: route[0], memory: route.slice(1)};
 }
 
@@ -335,8 +331,8 @@ function goalOrientedButLovesHorsesBot({place, parcels}, memory = {route: [], tu
 }
 
 let roboDictionary = {
-    routeRobot: routeBot,
-    goalOrientedRobot: goalOrientedBot,
+    routeBot: routeBot,
+    goalOrientedBot: goalOrientedBot,
     randoBot: randoBot,
     goalOrientedButLovesHorsesBot: goalOrientedButLovesHorsesBot,
     brutusBot: brutusBot,
@@ -347,7 +343,7 @@ let roboDictionary = {
 
 let roadGraph = buildGraph(roads);
 
-let results = robotComparison(roboDictionary, 1000, 7);
+let results = robotComparison(roboDictionary, 100, 5);
 
 results.sort((a,b)=>{
     if(a.averageSteps > b.averageSteps) {
