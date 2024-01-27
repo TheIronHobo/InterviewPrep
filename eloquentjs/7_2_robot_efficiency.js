@@ -166,7 +166,11 @@ function goalOrientedBot({place, parcels}, route = []) {
     return {direction: route[0], memory: route.slice(1)};
 }
 
-function brutusBot(state,  memory = {route: [], relevantLocations: []}) {
+/**
+ * ----------- ROBOT ZOO (originals) -----------
+ */
+
+function brutusBot(state,  memory = {route: []}) {
     let bestRoute;
     let relevantLocations = [];
     let shortestRouteLengthEst = Infinity;
@@ -227,15 +231,13 @@ function brutusBot(state,  memory = {route: [], relevantLocations: []}) {
 
 function pickupDropoffBot({place, parcels}, route = []) {
     if (route.length === 0) {
-        unattainedParcels = parcels.filter(j => j.place !== place);
-
-        if (unattainedParcels.length !== 0) {
-            route = findRoute(roadGraph, place, unattainedParcels[0].place);
-            //return {direction: route[0], memory: route.slice(1)};
-        } else if (parcels[0].place !== place) {
-            route = findRoute(roadGraph, place, parcels[0].place);
+        let unattainedParcelPickups = parcels.filter(j => j.place !== place).map(j => j.place);
+        let undeliveredParcelsDropoffs = parcels.filter(j => j.place === place).map(j => j.address);;
+        
+        if (unattainedParcelPickups.length !== 0) {
+            route = findRoute(roadGraph, place, unattainedParcelPickups[0]);
         } else {
-            route = findRoute(roadGraph, place, parcels[0].address);
+            route = findRoute(roadGraph, place, undeliveredParcelsDropoffs[0]);
         }
     }
 
@@ -249,20 +251,20 @@ function thoughtfulPickupDropoffBot({place, parcels}, route = []) {
         let undeliveredParcelsDropoffs = parcels.filter(j => j.place === place).map(j => j.address);;
         
         if (unattainedParcelPickups.length !== 0) {
-            route = closestParcelRoute(place, unattainedParcelPickups);
-        } else if (undeliveredParcelsDropoffs.length !== 0) { //This could just be an else I think??
-            route = closestParcelRoute(place, undeliveredParcelsDropoffs);
+            route = shortestRouteFromLocations(place, unattainedParcelPickups);
+        } else  {
+            route = shortestRouteFromLocations(place, undeliveredParcelsDropoffs);
         }
     }
 
-    function closestParcelRoute(place, parcelLocationList) {
+    function shortestRouteFromLocations(place, parcelLocationList) {
         let possibleRoutes = [];
         
         for (parcelLocation of parcelLocationList) {
             possibleRoutes.push(findRoute(roadGraph, place, parcelLocation))
         }
       
-        possibleRoutes.sort((a,b) => {
+        possibleRoutes.sort((a, b) => {
             if (a.length > b.length) {
                 return 1;
             } else if(a.length < b.length) {
@@ -281,13 +283,13 @@ function closestActionBot({place, parcels}, route = []) {
     if (route.length === 0) {
         let unattainedParcelPickups = parcels.filter(j => j.place !== place).map(j => j.place);
         let undeliveredParcelsDropoffs = parcels.filter(j => j.place === place).map(j => j.address);;
+        
+        let placesWithAvailableAction = [...unattainedParcelPickups, ...undeliveredParcelsDropoffs];
 
-        let placesWithAvailableAction = [...unattainedParcelPickups, ...undeliveredParcelsDropoffs]; //this has duplicates in it booo
-
-        route = closestParcelRoute(place, placesWithAvailableAction);
+        route = shortestRouteFromLocations(place, placesWithAvailableAction);
     }
 
-    function closestParcelRoute(place, parcelLocationList) {
+    function shortestRouteFromLocations(place, parcelLocationList) {
         let possibleRoutes = [];
         
         for (parcelLocation of parcelLocationList) {
