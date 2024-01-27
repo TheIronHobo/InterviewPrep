@@ -130,7 +130,7 @@ function robotComparison(robots, numTests, parcelCount) {
 }
 
 /**
- * ----------- ROBOT ZOO -----------
+ * ----------- ROBOT ZOO (book)-----------
  */
 
 function randoBot(state) {
@@ -170,6 +170,9 @@ function goalOrientedBot({place, parcels}, route = []) {
  * ----------- ROBOT ZOO (originals) -----------
  */
 
+/**
+ * First uses brute force search the find the shortest route and then follows it
+ */
 function brutusBot(state,  memory = {route: []}) {
     let bestRoute;
     let relevantLocations = [];
@@ -196,26 +199,26 @@ function brutusBot(state,  memory = {route: []}) {
     }
 
     function bruteSearch(internalState, history = []) {
-        history = [...history, internalState.place];
-        let nextPlaces = roadGraph[internalState.place];
-
         if (bestRoute !== undefined && history.length >= bestRoute.length) {
             return;
         } else if (history.length > shortestRouteLengthEst) { 
             return;
         } else if (internalState.parcels.length === 0) {
-            bestRoute = history;
+            bestRoute = [...history, internalState.place];
             return;
-        } else if (history.length >= 3) {
-            let currentLocation = history[history.length-1]
-            let lastLocation = history[history.length-2];
-            let secondToLastLocation = history[history.length-3];
+        } else if (history.length >= 2) {
+            let currentLocation = internalState.place;
+            let lastLocation = history[history.length-1];
+            let secondToLastLocation = history[history.length-2];
 
             const uselesslyBacktracking = !relevantLocations.includes(lastLocation) && (secondToLastLocation === currentLocation);
             if (uselesslyBacktracking) {
                 return;
             }
         }
+
+        history = [...history, internalState.place];
+        let nextPlaces = roadGraph[internalState.place];
 
         for (place of nextPlaces) {
             bruteSearch(internalState.move(place), history);
@@ -228,7 +231,9 @@ function brutusBot(state,  memory = {route: []}) {
     };
 }
 
-
+/**
+ * Picks up all the mail first before beginning deliveries
+ */
 function pickupDropoffBot({place, parcels}, route = []) {
     if (route.length === 0) {
         let unattainedParcelPickups = parcels.filter(j => j.place !== place).map(j => j.place);
@@ -244,7 +249,9 @@ function pickupDropoffBot({place, parcels}, route = []) {
     return {direction: route[0], memory: route.slice(1)};
 }
 
-
+/**
+ * Picks up all the closest mail first before beginning closest deliveries
+ */
 function thoughtfulPickupDropoffBot({place, parcels}, route = []) {
     if (route.length === 0) {
         let unattainedParcelPickups = parcels.filter(j => j.place !== place).map(j => j.place);
@@ -279,12 +286,17 @@ function thoughtfulPickupDropoffBot({place, parcels}, route = []) {
     return {direction: route[0], memory: route.slice(1)};
 }
 
+/**
+ * Prioritizes doing the closest avaialble action (pickup or delivery)
+ */
 function closestActionBot({place, parcels}, route = []) {
     if (route.length === 0) {
+        let testArray = []
+
         let unattainedParcelPickups = parcels.filter(j => j.place !== place).map(j => j.place);
         let undeliveredParcelsDropoffs = parcels.filter(j => j.place === place).map(j => j.address);;
         
-        let placesWithAvailableAction = [...unattainedParcelPickups, ...undeliveredParcelsDropoffs];
+        let placesWithAvailableAction = [...unattainedParcelPickups, ...undeliveredParcelsDropoffs]; 
 
         route = shortestRouteFromLocations(place, placesWithAvailableAction);
     }
@@ -311,25 +323,67 @@ function closestActionBot({place, parcels}, route = []) {
     return {direction: route[0], memory: route.slice(1)};
 }
 
+/**
+ * Delivers mail like the goal oriented bot but needs to return to farm periodically to see the horses
+ */
 function goalOrientedButLovesHorsesBot({place, parcels}, memory = {route: [], turnsWithoutSeeingHorse: Infinity}) {
     if (place === "Farm") {
         memory.turnsWithoutSeeingHorse = 0;
     }
 
-    if(memory.route.length === 0) {
-        if (memory.turnsWithoutSeeingHorse > 3) {
-            memory.route = findRoute(roadGraph, place, "Farm");
+    if (memory.route.length === 0) {
+        let destination;
+        if (memory.turnsWithoutSeeingHorse > 5) {
+            destination = "Farm";
         } else {
-            let parcel = parcels[0];
-            if (parcel.place != place) {
-                memory.route = findRoute(roadGraph, place, parcel.place);
-            } else {
-                memory.route = findRoute(roadGraph, place, parcel.address);
-            }
+            destination = goalOrientedBot({place, parcels}, []).direction;
         }
+        memory.route = findRoute(roadGraph, place, destination);
     }
 
     return {direction: memory.route[0], memory: {route: memory.route.slice(1), turnsWithoutSeeingHorse: memory.turnsWithoutSeeingHorse++}}
+}
+
+/**
+ * Polls all the other robots to see what they would do for a given state, and then picks the most popular option
+ */
+function pollBot(state, route = []) {
+    let poll = []
+
+    for (robot of Object.keys(roboDictionary)) {
+        if (roboDictionary[robot] !== pollBot) {
+            poll.push(roboDictionary[robot](state).direction);
+        }
+    }
+
+    function countBy(items, groupName) {
+        let counts = [];
+    
+        for (let item of items) {
+            let name = groupName(item);
+            let known = counts.findIndex(c => c.name === name);
+            if (known === -1) {
+                counts.push({name, count: 1});
+            } else {
+                counts[known].count++;
+            }
+        } 
+    
+        return counts;
+    }
+
+    let pollResults = countBy(poll, j => j)
+
+    pollResults.sort((a, b) => {
+        if(a.count < b.count) {
+            return 1;
+        } else if (a.count > b.count){
+            return -1;
+        }
+        return 0;
+    });
+
+    return {direction: pollResults[0].name, memory: route.slice(1)};
 }
 
 let roboDictionary = {
@@ -341,13 +395,14 @@ let roboDictionary = {
     pickupDropoffBot: pickupDropoffBot,
     thoughtfulPickupDropoffBot: thoughtfulPickupDropoffBot,
     closestActionBot: closestActionBot,
+    pollBot: pollBot,
 }
 
 let roadGraph = buildGraph(roads);
 
 let results = robotComparison(roboDictionary, 100, 5);
 
-results.sort((a,b)=>{
+results.sort((a, b) => {
     if(a.averageSteps > b.averageSteps) {
         return 1;
     } else if (a.averageSteps < b.averageSteps){
