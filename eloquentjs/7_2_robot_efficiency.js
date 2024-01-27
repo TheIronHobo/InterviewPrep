@@ -129,7 +129,40 @@ function robotComparison(robots, numTests, parcelCount) {
     return results;
 }
 
-//------------------------------------
+//--------------------------zooooooo
+
+function randoBot(state) {
+    return {direction: randomPick(roadGraph[state.place])}
+}
+
+function routeBot(state, memory = []) {
+    const mailRoute = [
+        "Alice's House", "Cabin", "Alice's House", "Bob's House",
+        "Town Hall", "Daria's House", "Ernie's House",
+        "Grete's House", "Shop", "Grete's House", "Farm",
+        "Marketplace", "Post Office"
+    ];
+    
+    if (memory.length === 0) {
+      memory = mailRoute;
+    }
+    
+    return {direction: memory[0], memory: memory.slice(1)};
+}
+
+function goalOrientedBot({place, parcels}, route = []) {
+    if (route.length === 0) {
+      const parcel = parcels[0];
+
+      if (parcel.place !== place) {
+        route = findRoute(roadGraph, place, parcel.place);
+      } else {
+        route = findRoute(roadGraph, place, parcel.address);
+      }
+    }
+    
+    return {direction: route[0], memory: route.slice(1)};
+}
 
 function brutusBot(state,  memory = {route: [], relevantLocations: []}) {
     let bestRoute;
@@ -248,12 +281,45 @@ function thoughtfulPickupDropoffBot({place, parcels}, route = []) {
     return {direction: route[0], memory: route.slice(1)};
 }
 
-function goalOrientedButLovesHorsesRobot({place, parcels}, memory = {route: [], turnsWithoutSeeingHorse: Infinity}) {
-    if(memory.route.length === 0) {
-        if (place === "Farm") {
-            memory.turnsWithoutSeeingHorse = 0;
+function closestActionBot({place, parcels}, route = []) {
+    if (route.length === 0) {
+        let unattainedParcelPickups = parcels.filter(j => j.place !== place).map(j => j.place);
+        let undeliveredParcelsDropoffs = parcels.filter(j => j.place === place).map(j => j.address);;
+
+        let placesWithAvailableAction = [...unattainedParcelPickups, ...undeliveredParcelsDropoffs]; //this has duplicates in it booo
+
+        route = closestParcelRoute(place, placesWithAvailableAction);
+    }
+
+    function closestParcelRoute(place, parcelLocationList) {
+        let possibleRoutes = [];
+        
+        for (parcelLocation of parcelLocationList) {
+            possibleRoutes.push(findRoute(roadGraph, place, parcelLocation))
         }
-        if (memory.turnsWithoutSeeingHorse > 5) {
+      
+        possibleRoutes.sort((a,b) => {
+            if (a.length > b.length) {
+                return 1;
+            } else if(a.length < b.length) {
+                return -1;
+            }
+            return 0;
+        });
+
+        return possibleRoutes[0];
+    }
+
+    return {direction: route[0], memory: route.slice(1)};
+}
+
+function goalOrientedButLovesHorsesBot({place, parcels}, memory = {route: [], turnsWithoutSeeingHorse: Infinity}) {
+    if (place === "Farm") {
+        memory.turnsWithoutSeeingHorse = 0;
+    }
+
+    if(memory.route.length === 0) {
+        if (memory.turnsWithoutSeeingHorse > 3) {
             memory.route = findRoute(roadGraph, place, "Farm");
         } else {
             let parcel = parcels[0];
@@ -264,15 +330,24 @@ function goalOrientedButLovesHorsesRobot({place, parcels}, memory = {route: [], 
             }
         }
     }
+
     return {direction: memory.route[0], memory: {route: memory.route.slice(1), turnsWithoutSeeingHorse: memory.turnsWithoutSeeingHorse++}}
 }
 
 let roboDictionary = {
-    goalOrientedButLovesHorsesRobot: goalOrientedButLovesHorsesRobot,
+    routeRobot: routeBot,
+    goalOrientedRobot: goalOrientedBot,
+    randoBot: randoBot,
+    goalOrientedButLovesHorsesBot: goalOrientedButLovesHorsesBot,
     brutusBot: brutusBot,
+    pickupDropoffBot: pickupDropoffBot,
+    thoughtfulPickupDropoffBot: thoughtfulPickupDropoffBot,
+    closestActionBot: closestActionBot,
 }
 
-let results = robotComparison(roboDictionary, 50);
+let roadGraph = buildGraph(roads);
+
+let results = robotComparison(roboDictionary, 1000, 7);
 
 results.sort((a,b)=>{
     if(a.averageSteps > b.averageSteps) {
@@ -282,6 +357,5 @@ results.sort((a,b)=>{
     }
     return 0;
 });
-    
-    
+
 console.log(results);
