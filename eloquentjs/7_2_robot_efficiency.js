@@ -176,11 +176,11 @@ function goalOrientedBot({place, parcels}, route = []) {
 function brutusBot(state,  memory = {route: []}) {
     let bestRoute;
     let relevantLocations = [];
-    let shortestRouteLengthEst = Infinity;
+    let shortestRouteUpperBound = Infinity;
 
     if (memory.route.length === 0) {
 
-        shortestRouteLengthEst = runRobot(state, thoughtfulPickupDropoffBot) + 1;
+        shortestRouteUpperBound = runRobot(state, thoughtfulPickupDropoffBot) + 1;
 
         if (relevantLocations.length === 0) { 
             for ({place, address} of state.parcels) {
@@ -201,7 +201,7 @@ function brutusBot(state,  memory = {route: []}) {
     function bruteSearch(internalState, history = []) {
         if (bestRoute !== undefined && history.length >= bestRoute.length) {
             return;
-        } else if (history.length > shortestRouteLengthEst) { 
+        } else if (history.length > shortestRouteUpperBound) { 
             return;
         } else if (internalState.parcels.length === 0) {
             bestRoute = [...history, internalState.place];
