@@ -7,14 +7,14 @@ class PGroup {
         return this.group.includes(item) ? true : false;
     }
 
-    add(item) {// this is adding things as strings??
+    add(item) {
         if (!this.has(item)) {
             let output = new PGroup();
 
-            for (let element in this.group) {
-                console.log(typeof element);
-                output.group.push(element);
+            for (let i = 0; i < this.group.length; i++) {
+                output.group.push(this.group[i]);
             }
+
             output.group.push(item);
 
             return output;
@@ -40,42 +40,40 @@ class PGroup {
 
     static from(inputArray) {
         let output = new PGroup();
-        console.log(typeof inputArray[0])
-        for (let element of inputArray) {
-            output = output.add(element);
+
+        for (let i = 0; i < inputArray.length; i++) {
+            output = output.add(inputArray[i]);
         }
 
         return output;
     }
 
     display() {
-        console.log((this.group));
+        console.log(this.group);
     }
 }
 
-let test = [1, 2, 3];
+let test = [1, 2, 3, 4, 'a'];
 
 let testGroup = PGroup.from(test);
 
 console.log("\nOriginal");
 testGroup.display();
 
-// console.log("\nAdding '6'");
-// testGroup.add('6').display();
+console.log("\nAdding '6'");
+testGroup.add('6').display();
 
-// console.log("\nAdding 6");
-// testGroup.add(6).display();;
+console.log("\nAdding 6");
+testGroup.add(6).display();;
 
-// console.log("\nDelete 2");
-// testGroup.display();
-// console.log(testGroup.has(2));
-// testGroup.delete(2).display();;
+console.log("\nDelete 2");
+testGroup.delete(2).display();;
 
-// console.log("\nDelete 4");
-// testGroup.delete(6).display();;
+console.log("\nDelete 6");
+testGroup.delete(6).display();;
 
-// console.log("\nDelete 't'");
-// testGroup.delete('t').display();;
+console.log("\nDelete 't'");
+testGroup.delete('t').display();;
 
 
-// console.log("\nTest complete");
+console.log("\nTest complete");
