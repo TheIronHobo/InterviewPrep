@@ -75,5 +75,4 @@ testGroup.delete(6).display();;
 console.log("\nDelete 't'");
 testGroup.delete('t').display();;
 
-
 console.log("\nTest complete");
