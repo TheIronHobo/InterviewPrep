@@ -29,7 +29,7 @@ const box = {
     withBoxUnlocked(function() {
       throw new Error("Pirates on the horizon! Abort!");
     });
-  } catch (e) {
+  } catch(e) {
     console.log("Error raised: " + e);
   }
   console.log(box.locked); // true 
