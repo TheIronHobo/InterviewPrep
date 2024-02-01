@@ -11,7 +11,7 @@ const box = {
   
   function withBoxUnlocked(body) {
     let initialStatus = box.locked;
-    
+
     try {
         box.unlock();
         body();
@@ -32,5 +32,4 @@ const box = {
   } catch (e) {
     console.log("Error raised: " + e);
   }
-  console.log(box.locked);
-  // true 
+  console.log(box.locked); // true 
