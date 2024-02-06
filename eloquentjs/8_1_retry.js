@@ -13,7 +13,7 @@ function MultiplicationUnitFailureErrorHanlder(inputFunction) {
     while (true) {
         try {
             return inputFunction();
-        } catch(e) {
+        } catch (e) {
             if (e instanceof MultiplicationUnitFailure) {
                 console.log("Multiplication failed. Trying again..");
             } else {
