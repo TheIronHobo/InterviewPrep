@@ -1,20 +1,16 @@
 class MultiplicationUnitFailure extends Error{};
 
 function primitiveMultiply(a, b) {
-    const innerPrimitiveMultiply = j => {
-        if (Math.random() < 0.80) {
-            throw new MultiplicationUnitFailure();
-        } else {
-            console.log("Multiplication sucessful!")
-            return a * b;
-        }
+    if (Math.random() < 0.20) {
+        console.log("Multiplication sucessful!")
+        return a * b;
+    } else {
+        throw new MultiplicationUnitFailure();
     }
-
-    return MultiplicationUnitFailureErrorHanlder(innerPrimitiveMultiply);
 }
 
 function MultiplicationUnitFailureErrorHanlder(inputFunction) {
-    for(;;) {
+    while (true) {
         try {
             return inputFunction();
         } catch(e) {
@@ -27,7 +23,7 @@ function MultiplicationUnitFailureErrorHanlder(inputFunction) {
     }
 }
 
-console.log(primitiveMultiply(3, 5));
+console.log(MultiplicationUnitFailureErrorHanlder(j => primitiveMultiply(3,5)));
 
 // Sample output: 
 // Multiplication failed. Trying again..
