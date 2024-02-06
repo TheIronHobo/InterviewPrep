@@ -2,7 +2,7 @@ class PGroup {
     static empty = new PGroup();
 
     constructor(group = []) {
-        this.group =  group;
+        this.group = group;
     }
 
     has(item) {
