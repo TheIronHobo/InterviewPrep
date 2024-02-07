@@ -32,4 +32,6 @@ const box = {
   } catch(e) {
     console.log("Error raised: " + e);
   }
+
   console.log(box.locked); // true 
+  
