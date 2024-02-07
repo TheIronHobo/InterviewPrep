@@ -26,7 +26,6 @@ verify(/\b[^eE\s]+\b/,
        ["red platypus", "wobbling nest"],
        ["earth bed", "learning ape", "BEET"]);
 
-
 function verify(regexp, yes, no) {
        for (let str of yes) {
               if (!regexp.test(str)) {
