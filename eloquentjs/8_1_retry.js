@@ -9,10 +9,10 @@ function primitiveMultiply(a, b) {
     }
 }
 
-function MultiplicationUnitFailureErrorHanlder(inputFunction) {
+function reliableMultiply(a, b) {
     while (true) {
         try {
-            return inputFunction();
+            return primitiveMultiply(a, b);
         } catch (e) {
             if (e instanceof MultiplicationUnitFailure) {
                 console.log("Multiplication failed. Trying again..");
@@ -23,7 +23,7 @@ function MultiplicationUnitFailureErrorHanlder(inputFunction) {
     }
 }
 
-console.log(MultiplicationUnitFailureErrorHanlder(j => primitiveMultiply(3,5)));
+console.log(reliableMultiply(3, 5));
 
 // Sample output: 
 // Multiplication failed. Trying again..
