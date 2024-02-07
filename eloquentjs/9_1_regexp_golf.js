@@ -1,5 +1,3 @@
-// Fill in the regular expressions
-
 verify(/ca(t|r)/,
        ["my car", "bad cats"],
        ["camper", "high art"]);
