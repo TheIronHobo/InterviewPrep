@@ -3,7 +3,7 @@ const { roadGraph } = require("./roadGraph");
 const { runRobot } = require("./runRobot");
 
 /**
- * ----------- Book -----------
+ * ----------- Book-----------
  */
 
 function randoBot(state) {
@@ -220,48 +220,6 @@ function goalOrientedButLovesHorsesBot({place, parcels}, memory = {route: [], tu
     }
 
     return {direction: memory.route[0], memory: {route: memory.route.slice(1), turnsWithoutSeeingHorse: memory.turnsWithoutSeeingHorse++}}
-}
-
-/**
- * Polls all the other robots to see what they would do for a given state, and then picks the most popular option
- */
-function pollBot(state, route = []) {
-    let poll = []
-
-    for (robot of Object.keys(roboDictionary)) {
-        if (roboDictionary[robot] !== pollBot) {
-            poll.push(roboDictionary[robot](state).direction);
-        }
-    }
-
-    function countBy(items, groupName) {
-        let counts = [];
-    
-        for (let item of items) {
-            let name = groupName(item);
-            let known = counts.findIndex(c => c.name === name);
-            if (known === -1) {
-                counts.push({name, count: 1});
-            } else {
-                counts[known].count++;
-            }
-        } 
-    
-        return counts;
-    }
-
-    let pollResults = countBy(poll, j => j)
-
-    pollResults.sort((a, b) => {
-        if (a.count < b.count) {
-            return 1;
-        } else if (a.count > b.count){
-            return -1;
-        }
-        return 0;
-    });
-
-    return {direction: pollResults[0].name, memory: route.slice(1)};
 }
 
 let roboDictionary = {

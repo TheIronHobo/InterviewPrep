@@ -30,7 +30,7 @@ function robotComparison(robots, numTests, parcelCount) {
 let results = robotComparison(roboDictionary, 100, 5);
 
 results.sort((a, b) => {
-    if(a.averageSteps > b.averageSteps) {
+    if (a.averageSteps > b.averageSteps) {
         return 1;
     } else if (a.averageSteps < b.averageSteps){
         return -1;
