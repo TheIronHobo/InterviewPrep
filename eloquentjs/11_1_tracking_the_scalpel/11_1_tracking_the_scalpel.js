@@ -22,14 +22,19 @@ function initializeCrowNet() {
             }
         }
     );
-
-
 }
 
-function crowNetUpdate() {
-    for (node in crowNetNodes) {
-        //node.update();
+function scalpelRandomWalk() {
+    let startingNode = crowNetNodes[Math.floor(Math.random()*crowNetNodes.length)];
+    startingNode.toolFlowLog.push(
+
+    );
+    let walkDistance = 1000;
+
+    for (let i = 0; i < walkDistance; i++) {
+
     }
+
 }
 
 initializeCrowNet();
