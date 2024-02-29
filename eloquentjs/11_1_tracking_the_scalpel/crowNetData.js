@@ -54,7 +54,7 @@ function scalpelRandomWalk() {
 
     console.log("Scalpel starts at " + startingNode.name);
 
-    let walkDistance = 500;
+    let walkDistance = 5000;
 
     let currentNode = startingNode;
 
@@ -65,8 +65,8 @@ function scalpelRandomWalk() {
         currentNode.removeTool("scalpel", randomDestination.name);
         // imagine a crow flying with a scalpel here
         randomDestination.addTool("scalpel", currentNode.name);
-        console.log(`Scalpel traveled from ${currentNode.name} to ${randomDestination.name}`);
-        console.log(currentNode.toolFlowLog);
+        //console.log(`Scalpel traveled from ${currentNode.name} to ${randomDestination.name}`);
+        //console.log(currentNode.toolFlowLog);
         currentNode = randomDestination;
     }
 

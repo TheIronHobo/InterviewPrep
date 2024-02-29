@@ -10,3 +10,5 @@ initializeCrowNet();
 scalpelRandomWalk();
 crowNetDisplay();
 
+// need to do the async stuff here
+
