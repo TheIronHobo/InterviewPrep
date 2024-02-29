@@ -5,27 +5,30 @@ class NestNode {
         this.toolFlowLog = [];
     }
 
-    addTool(toolName, location) {
+    addTool(toolName, inboundLocation) {
 
         let existingLogindex = this.toolFlowLog.findIndex((log) => log.name === toolName);
 
         if (existingLogindex !== -1) {
-            this.toolFlowLog[existingLogindex].routing = [this.name, ''];
+            this.toolFlowLog[existingLogindex].routing = [inboundLocation, ''];
             return;
         } 
 
-        this.toolFlowLog.push({name: tool, routing: [location, '']});
+        this.toolFlowLog.push({name: toolName, routing: [inboundLocation, '']});
     }
 
-    removeTool(tool, location) {
-        let existingLogindex = this.toolFlowLog.findIndex((log) => log.name === tool.name);
+    removeTool(toolName, outboundLocation) {
+        let existingLogindex = this.toolFlowLog.findIndex((log) => log.name === toolName);
+
         if (existingLogindex !== -1) {
-            
-        } else {
-            
-        }
-    }
+            this.toolFlowLog[existingLogindex].routing[1] = outboundLocation;// = [location, ''];
+            return;
+        } 
 
+        throw "CANNOT REMOVE NON-EXISTENT TOOL";
+
+        //this.toolFlowLog.push({name: tool, routing: [location, '']});
+    }
 
 }
 
