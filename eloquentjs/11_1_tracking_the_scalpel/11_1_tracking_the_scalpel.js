@@ -4,10 +4,8 @@ const { crowNetLocations,
         crowNetNodes, 
         crowNetDisplay,
         initializeCrowNet,
-        scalpelRandomWalk} = require('./crowNetData');
+        scalpelRandomWalk } = require('./crow-tech');
 
-initializeCrowNet();
-scalpelRandomWalk();
 crowNetDisplay();
 
 // need to do the async stuff here

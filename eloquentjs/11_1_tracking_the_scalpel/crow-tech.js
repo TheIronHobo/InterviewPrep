@@ -15,6 +15,11 @@ const crowNetConnections = [
     "Butcher's Shop-Big Oak"
 ];
 
+defineRequestType("note", (nest, content, source, done) => {
+    console.log(`${nest.name} received note: ${content}`);
+    done();
+  });
+
 const removeDuplicates = ([...array]) => {
     array.sort();
 
@@ -58,7 +63,7 @@ function scalpelRandomWalk() {
 
     let currentNode = startingNode;
 
-    console.log("Starting random walk");
+    console.log("Starting random walk...");
 
     for (let i = 0; i < walkDistance; i++) {
         let randomDestination = currentNode.connections[Math.floor(Math.random()*currentNode.connections.length)];
@@ -97,5 +102,8 @@ crowNetLocations = removeDuplicates(crowNetLocations);
 
 const crowNetGraph = buildGraph(crowNetConnections);
 let crowNetNodes = [];
+
+initializeCrowNet();
+scalpelRandomWalk();
 
 module.exports = {crowNetLocations, crowNetConnections, crowNetGraph, crowNetNodes, crowNetDisplay, initializeCrowNet, scalpelRandomWalk};
