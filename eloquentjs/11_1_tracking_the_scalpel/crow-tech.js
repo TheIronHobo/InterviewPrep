@@ -15,10 +15,10 @@ const crowNetConnections = [
     "Butcher's Shop-Big Oak"
 ];
 
-defineRequestType("note", (nest, content, source, done) => {
-    console.log(`${nest.name} received note: ${content}`);
-    done();
-  });
+// const defineRequestType = (requestType, callback) => {
+
+
+// }
 
 const removeDuplicates = ([...array]) => {
     array.sort();

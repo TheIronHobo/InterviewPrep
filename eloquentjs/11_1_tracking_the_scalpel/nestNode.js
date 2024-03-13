@@ -28,8 +28,14 @@ class NestNode {
         throw "CANNOT REMOVE NON-EXISTENT TOOL";
     }
 
-    send() {
+    send(destination, requestType, content, callback) {
 
+    }
+
+    display() {
+        console.log(`Name: ${this.name}`);
+        process.stdout.write("Connections: ");
+        this.connections.forEach((connection) => process.stdout.write("| " + connection.name + " |"));
     }
 }
 
