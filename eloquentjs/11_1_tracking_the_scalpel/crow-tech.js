@@ -15,11 +15,6 @@ const crowNetConnections = [
     "Butcher's Shop-Big Oak"
 ];
 
-// const defineRequestType = (requestType, callback) => {
-
-
-// }
-
 const removeDuplicates = ([...array]) => {
     array.sort();
 
@@ -54,31 +49,31 @@ function initializeCrowNet() {
 }
 
 function scalpelRandomWalk() {
-    let startingNode = crowNetNodes[Math.floor(Math.random()*crowNetNodes.length)];
-    startingNode.addTool("scalpel", "STOLEN FROM HOSPITAL");
+    let currentNode = crowNetNodes[Math.floor(Math.random()*crowNetNodes.length)];
+    currentNode.addTool("scalpel", "STOLEN FROM HOSPITAL");
 
-    console.log("Scalpel starts at " + startingNode.name);
+    console.log("Scalpel starts at " + currentNode.name);
 
-    let walkDistance = 5000;
-
-    let currentNode = startingNode;
-
+    let walkDistance = 5;
     console.log("Starting random walk...");
 
     for (let i = 0; i < walkDistance; i++) {
         let randomDestination = currentNode.connections[Math.floor(Math.random()*currentNode.connections.length)];
+        // console.log(`Scalpel is leaving ${currentNode.name} and going to ${randomDestination.name}...`)
         currentNode.removeTool("scalpel", randomDestination.name);
-        // imagine a crow flying with a scalpel here
+        // imagine a crow flying with a scalpel here 
         randomDestination.addTool("scalpel", currentNode.name);
-        //console.log(`Scalpel traveled from ${currentNode.name} to ${randomDestination.name}`);
-        //console.log(currentNode.toolFlowLog);
+        // console.log(`Log of destination we left is ${JSON.stringify((currentNode.storage.tools.find(tool => tool.name === 'scalpel')).routing)}`)
+        // console.log(`Log of destination we're at is  ${JSON.stringify((randomDestination.storage.tools.find(tool => tool.name === 'scalpel')).routing)}`)
+        // console.log(currentNode.storage.tools.find(tool => tool.name === 'scalpel').routing);
         currentNode = randomDestination;
     }
 
+    console.log(`Scalpel ended up in ${currentNode.name}`);
     console.log("Random walk complete");
 }
 
-function crowNetDisplay() {
+function crowNetDisplay() { //drastically update/simplify this please
     console.log("CROW NET DATA");
     console.log("__________________________");
     crowNetNodes.forEach((node) => {
@@ -95,9 +90,11 @@ function crowNetDisplay() {
  }
 
 let crowNetLocations = [];
+
 for (let i = 0; i < crowNetConnections.length; i++) {
     crowNetLocations.push(...crowNetConnections[i].split('-'))
 }
+
 crowNetLocations = removeDuplicates(crowNetLocations);
 
 const crowNetGraph = buildGraph(crowNetConnections);

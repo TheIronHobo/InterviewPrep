@@ -1,38 +1,42 @@
-const { requestType, requestTypes } = require('./requestTypes');
+const { requestType, requestTypes } = require('./request');
 const { deepEqual } = require('./deepComparison');
 
 class NestNode {
     constructor(name) {
         this.name = name;
         this.connections = [];
-        this.toolFlowLog = [];
         this.messageHistory = [];
         this.storage = {
-            enemies: ["Gray Squirrel", "Mrs. Martin", "Hawk"]
+            enemies: [],
+            tools: [],
         };
     }
 
-    addTool(toolName, inboundLocation) {
+    addTool(toolName, sourceName) {
+        let exisitingToolIndex = this.storage.tools.findIndex(toolEntry => toolEntry.name === toolName);
 
-        let existingLogindex = this.toolFlowLog.findIndex((log) => log.name === toolName);
-
-        if (existingLogindex !== -1) {
-            this.toolFlowLog[existingLogindex].routing = [inboundLocation, ''];
+        if (exisitingToolIndex !== -1) {
+            this.storage.tools[exisitingToolIndex].routing = [sourceName, ''];
             return;
         }
 
-        this.toolFlowLog.push({name: toolName, routing: [inboundLocation, '']});
+        this.storage.tools.push({
+            name: toolName,
+            routing: [sourceName, ''],
+        });
+
     }
 
-    removeTool(toolName, outboundLocation) {
-        let existingLogindex = this.toolFlowLog.findIndex((log) => log.name === toolName);
+    removeTool(toolName, destName) {
+        let exisitingToolIndex = this.storage.tools.findIndex(toolEntry => toolEntry.name === toolName);
 
-        if (existingLogindex !== -1) {
-            this.toolFlowLog[existingLogindex].routing[1] = outboundLocation;
+        if (exisitingToolIndex !== -1) {
+            this.storage.tools[exisitingToolIndex].routing[1] = destName;
             return;
-        } 
+        }
 
         throw "CANNOT REMOVE NON-EXISTENT TOOL";
+
     }
 
     send(destination, requestTypeName, content, callback) {
@@ -51,9 +55,19 @@ class NestNode {
         console.log("Name matches destination.");
             requestTypes[requestTypeName](this, content, this.name, callback);
        } else {
-           // let hopNodeName = findRoute(this.name, destination, NetConnections);
             this.connections.forEach((connection) => connection.send(destination, requestTypeName, content, callback));
        }
+    }
+
+    sendBeta(destination, requestTypeName, content, callback) {
+ 
+        //I think this is where we handle requests differently
+        // based on type
+        if (requestTypeName === 'storage') {
+
+        }
+
+
     }
 
 
@@ -84,8 +98,9 @@ class NestNode {
         return repeatMessage;
     }
 
-    readStorage(name, callback) {
-        let result = this.storage[name];
+    readStorage(storageCategory, itemName, callback) {
+        let result = this.storage[storageCategory].find(item => item.name === itemName);
+        console.log(`Result is ${JSON.stringify(result)}`);
         callback(result);
     }
 
