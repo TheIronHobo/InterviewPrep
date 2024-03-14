@@ -1,8 +1,15 @@
+const { requestType, requestTypes } = require('./requestTypes');
+const { deepEqual } = require('./deepComparison');
+
 class NestNode {
     constructor(name) {
         this.name = name;
         this.connections = [];
         this.toolFlowLog = [];
+        this.messageHistory = [];
+        this.storage = {
+            enemies: ["Gray Squirrel", "Mrs. Martin", "Hawk"]
+        };
     }
 
     addTool(toolName, inboundLocation) {
@@ -28,8 +35,64 @@ class NestNode {
         throw "CANNOT REMOVE NON-EXISTENT TOOL";
     }
 
-    send(destination, requestType, content, callback) {
+    send(destination, requestTypeName, content, callback) {
+        if (this.isRepeatMessage(destination, requestTypeName, content, callback)) {
+            return;
+        }
 
+        this.messageHistory.push({
+            destination: destination,
+            requestTypeName: requestTypeName,
+            content: content,
+            callback: callback,
+       });
+
+       if (this.name === destination) {
+        console.log("Name matches destination.");
+            requestTypes[requestTypeName](this, content, this.name, callback);
+       } else {
+           // let hopNodeName = findRoute(this.name, destination, NetConnections);
+            this.connections.forEach((connection) => connection.send(destination, requestTypeName, content, callback));
+       }
+    }
+
+
+
+    /**
+     * Is this message already in our message history?
+     * @param {*} destination 
+     * @param {*} requestType 
+     * @param {*} content 
+     * @param {*} callback 
+     */
+    isRepeatMessage(destination, requestTypeName, content, callback) {
+        let testMessage = {
+            destination: destination,
+            requestTypeName: requestTypeName,
+            content: content,
+            callback: callback,
+        }
+
+        let repeatMessage = false;
+
+        this.messageHistory.forEach((message) => {
+            if (deepEqual(testMessage, message)) {
+                repeatMessage = true;
+            } 
+        });
+
+        return repeatMessage;
+    }
+
+    readStorage(name, callback) {
+        let result = this.storage[name];
+        callback(result);
+    }
+
+    neighbors() {
+        let output = [];
+        this.connections.forEach((connection) => output.push(connection.name));
+        return output;
     }
 
     display() {
