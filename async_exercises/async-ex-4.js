@@ -23,7 +23,6 @@ function joinWifi(networkID, password) {
             resolve("Authenticated");
             return;
         }
-
     });
 
     return withTimeout(promise, 20);
@@ -54,6 +53,7 @@ function crackPasscode(networkID) {
   }
 
   /**
+   * Eloquent JS Chapter 11
    * Wraps a promise in a timeout
    * @param {*} promise 
    * @param {*} time 
