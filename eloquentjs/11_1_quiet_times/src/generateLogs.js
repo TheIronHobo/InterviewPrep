@@ -7,7 +7,7 @@ function generateLogs() {
 
     for (let i = 0; i < 24 * 7 * 52; i++) {
         const hour = i % 24;
-        const week = Math.floor((i / (7 * 24)));
+        const week = Math.floor(i / (7 * 24));
         const personProbabilty = Math.max(gaussian(hour, 2.2, 9, .2), gaussian(hour, 2, 13, 0.1));
 
         if (Math.random() < personProbabilty) {
