@@ -15,13 +15,13 @@ function generateLogs() {
         }
     }
 
-    let cameraDog = logList.map((element, index) => {
+    let cameraLog = logList.map((element, index) => {
         let file = `week_${index}_activity_log.txt`;
         fs.writeFile(`weekly_logs/${file}`, element.join('\n'), () => {});
         return file;
     });
 
-    fs.writeFile('camera_logs.txt', cameraDog.join('\n'), () => {});
+    fs.writeFile('camera_logs.txt', cameraLog.join('\n'), () => {});
 }
 
 module.exports = { generateLogs };
