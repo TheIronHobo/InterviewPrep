@@ -1,45 +1,45 @@
 const fs = require('fs');
+const { generateLogs } = require('./src/generateLogs');
+const { textFile } = require ('./src/textFile');
 
-function generateLogList(startDate) {
-    let logList = [];
+activityTable(1).then(table => console.log(table));
 
-    let msInHour = 3600000;
+async function activityTable(day) {
+    let logFileList = await textFile('camera_logs.txt');
+    let filePaths = logFileList.split('\n').filter(j => j.includes('log'));
 
-    let time = new Date(startDate).getTime();
-    console.log(time);
-    for (let i = 0; i < 52; i++) {
-        let log = '';
-        for (let j = 0; j < 7; j++) {
-            for (let k = 0; k < 24; k++) {
-                time += msInHour;
-                if ((Math.random()*24) < Math.abs(k-12)) {
-                    //log.push(time);
-                    log += time + '\n';
-                }
-            }
-        }
-        logList.push(log);
+    let timeStamps = [];
+    for (let i = 0; i < filePaths.length; i++) {
+        let logContents = await textFile(`logs/${filePaths[i]}`);
+        let logTimeStamps = logContents.split('\n').filter(j => j);
+        logTimeStamps.forEach(element => {
+            timeStamps.push(element);
+        });
     }
 
-    return logList;
+    let activityTable = [];
+    for (let i = 0; i < 24; i++) {
+        activityTable.push(0);
+    }
+
+    timeStamps = timeStamps.forEach((time) => {
+        let date = new Date();
+        date.setTime(time);
+        let stampDay = date.getDay();
+        if (stampDay === day) {
+            let hour = date.getHours();
+            activityTable[hour]++;
+        }
+    });
+
+    return new Promise((resolve) => {
+        resolve(activityTable);
+    });
 }
 
-let logList = generateLogList('January 1, 2024 00:00:00');
-let cameraLog = '';
-
-// logList.forEach(weeklyLog => {
-//     fs.writeFile('log.txt.', JSON.stringify(log, null, 4), () => console.log('fileCreated'));    
-// })
-// we should use promise. all for these and then call the camera log file once its done
-for (let i = 0; i < logList.length; i++) {
-    let file = `logs/log-${i+1}.txt`;
-    fs.writeFile(file, logList[i], () => console.log(`Generated log #${i+1}`));
-    //fileList.push(file);
-    cameraLog += file + '\n';
-}
-
-fs.writeFile('cameraLog.txt', cameraLog, () => console.log(`Generated Camera Log`));
-
-
-///fs.writeFile('cameraLog.json', JSON.stringify(log, null, 4), () => console.log('fileCreated'));
-
+// output -> 
+// [
+//   0, 0,  0,  0, 0, 0, 0,  0,
+//   0, 1, 20, 20, 2, 1, 9, 25,
+//   0, 0,  0,  0, 0, 0, 0,  0
+// ]
