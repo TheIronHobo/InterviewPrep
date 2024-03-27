@@ -1,6 +1,11 @@
 const { generateLogs } = require('./src/generateLogs');
 const { textFile } = require('./src/textFile');
 
+/**
+ * Returns promise of hourly security camera activity recorded for given day of week (0-6)
+ * @param {*} day 
+ * @returns 
+ */
 async function activityTable(day) {
     const camera_logs = await textFile('camera_logs.txt');
     const filePaths = camera_logs.split('\n').filter(j => j);
