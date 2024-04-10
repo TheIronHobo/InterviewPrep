@@ -2,6 +2,11 @@ const { time } = require('console');
 const { generateLogs } = require('./src/generateLogs');
 const { textFile } = require('./src/textFile');
 
+/**
+ * Returns promise of hourly security camera activity recorded for given day of week (0-6)
+ * @param {*} day 
+ * @returns 
+ */
 async function activityTable(day) {
     let logs = await Promise.all((await textFile('camera_logs.txt'))
     .split('\n')
