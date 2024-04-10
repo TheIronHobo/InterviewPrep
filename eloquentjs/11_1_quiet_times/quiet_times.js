@@ -8,20 +8,17 @@ const { textFile } = require('./src/textFile');
  * @returns 
  */
 async function activityTable(day) {
-    let logs = await Promise.all((await textFile('camera_logs.txt'))
-    .split('\n')
-    .filter(j => j.length > 0)
+    const fileToArray = file => file.split('\n').filter(j => j.length > 0);
+
+    let logs = await Promise.all(fileToArray(await textFile('camera_logs.txt'))
     .map(async fileName => {
-        return await textFile(`weekly_logs/${fileName}`);
+        return fileToArray(await textFile(`weekly_logs/${fileName}`));
     }));
 
     const hourlyActivity = Array(24).fill(0);
 
     for (const log of logs) {
-        log
-        .split('\n')
-        .filter(j => j.length > 0)
-        .forEach(time => {
+        log.forEach(time => {
             const date = new Date(parseInt(time));
 
             if (date.getDay() === day) {
