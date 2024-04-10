@@ -1,34 +1,32 @@
+const { time } = require('console');
 const { generateLogs } = require('./src/generateLogs');
 const { textFile } = require('./src/textFile');
 
 async function activityTable(day) {
-    const camera_logs = await textFile('camera_logs.txt');
-    const filePaths = camera_logs.split('\n').filter(j => j);
+    let logs = await Promise.all((await textFile('camera_logs.txt'))
+    .split('\n')
+    .filter(j => j.length > 0)
+    .map(async fileName => {
+        return await textFile(`weekly_logs/${fileName}`);
+    }));
 
-    const timeStamps = [];
-    for (let i = 0; i < filePaths.length; i++) {
-        const logContents = await textFile(`weekly_logs/${filePaths[i]}`);
+    const hourlyActivity = Array(24).fill(0);
 
-        logContents.split('\n').filter(j => j).forEach(element => {
-            timeStamps.push(element);
-        });
+    for (const log of logs) {
+        log
+        .split('\n')
+        .filter(j => j.length > 0)
+        .forEach(time => {
+            const date = new Date(parseInt(time));
+
+            if (date.getDay() === day) {
+                const hour = date.getHours();
+                hourlyActivity[hour]++;
+            }
+        })
     }
 
-    const activity = Array(24).fill(0);
-
-    timeStamps.forEach((time) => {
-        const date = new Date();
-        date.setTime(time);
-
-        if (date.getDay() === day) {
-            const hour = date.getHours();
-            activity[hour]++;
-        }
-    });
-
-    return new Promise((resolve) => {
-        resolve(activity);
-    });
+    return hourlyActivity;
 }
 
 generateLogs();
@@ -36,7 +34,7 @@ activityTable(1).then(table => console.log(table));
 
 // output -> 
 // [
-//     0,   0,   0, 0, 0,   0,   0, 0,
-//     0, 260, 572, 0, 0, 156, 156, 0,
-//     0,   0,   0, 0, 0,   0,   0, 0 
+//     0,   0,   0,   0,   0,  52, 208, 104,
+//   416, 624, 624, 260, 208, 156, 260, 104,
+//   104, 208,   0,   0,  52,   0,   0,   0
 // ]
