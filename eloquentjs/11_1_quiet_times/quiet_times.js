@@ -9,8 +9,9 @@ const { fileToArray } = require('./src/fileToArray');
  * @returns 
  */
 async function activityTable(day) {
-    let logs = await Promise.all(fileToArray(await textFile('camera_logs.txt'))
-        .map(async fileName => fileToArray(await textFile(`weekly_logs/${fileName}`))
+    let logs = await Promise.all(
+        fileToArray(await textFile('camera_logs.txt'))
+            .map(async fileName => fileToArray(await textFile(`weekly_logs/${fileName}`))
     ));
 
     const hourlyActivity = Array(24).fill(0);
