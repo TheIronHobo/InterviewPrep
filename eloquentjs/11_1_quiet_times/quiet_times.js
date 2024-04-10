@@ -1,6 +1,7 @@
 const { time } = require('console');
 const { generateLogs } = require('./src/generateLogs');
 const { textFile } = require('./src/textFile');
+const { fileToArray } = require('./src/fileToArray');
 
 /**
  * Returns promise of hourly security camera activity recorded for given day of week (0-6)
@@ -8,12 +9,9 @@ const { textFile } = require('./src/textFile');
  * @returns 
  */
 async function activityTable(day) {
-    const fileToArray = file => file.split('\n').filter(j => j.length > 0);
-
     let logs = await Promise.all(fileToArray(await textFile('camera_logs.txt'))
-    .map(async fileName => {
-        return fileToArray(await textFile(`weekly_logs/${fileName}`));
-    }));
+        .map(async fileName => fileToArray(await textFile(`weekly_logs/${fileName}`))
+    ));
 
     const hourlyActivity = Array(24).fill(0);
 
@@ -25,7 +23,7 @@ async function activityTable(day) {
                 const hour = date.getHours();
                 hourlyActivity[hour]++;
             }
-        })
+        });
     }
 
     return hourlyActivity;
