@@ -4,17 +4,17 @@ function Promise_all(promises) {
     async function iteratePromises() {
       output = [];
         for (let promise of promises) {
-          try {
             output.push(await promise);
-          } catch (e) {
-            reject(e);
-          }
-           
         }
-        resolve(output);
+        return output;
     }
 
-    iteratePromises();
+    try {
+      resolve(iteratePromises());
+    } catch (e) {
+      reject(e);
+    }
+    
   });
 }
 
