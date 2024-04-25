@@ -1,5 +1,7 @@
 const fs = require('fs');
 
+const listStringToArray = file => file.split('\n').filter(j => j.length > 0);
+
 function textFile(filepath) {
     return new Promise((resolve, reject) => {
         fs.readFile(filepath, (err, data) => {
@@ -12,4 +14,4 @@ function textFile(filepath) {
     });
 }
 
-module.exports = { textFile };
+module.exports = { listStringToArray, textFile }

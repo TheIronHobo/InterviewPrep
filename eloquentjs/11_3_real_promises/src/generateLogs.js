@@ -1,5 +1,9 @@
 const fs = require('fs');
-const { gaussian } = require('./gaussian');
+
+function gaussian(x, variance, center, scale = 1) {
+    const exponent = (x - center) ** 2 / (-2 * variance * variance);
+    return scale * Math.E ** exponent;
+};
 
 function generateLogs() {
     let startTime = new Date('January 1, 2024 00:00:00').getTime();

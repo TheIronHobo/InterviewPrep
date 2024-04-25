@@ -1,6 +1,5 @@
 const { generateLogs } = require('./src/generateLogs');
-const { fileToArray } = require('./src/fileToArray');
-const { textFile } = require('./src/textFile');
+const { listStringToArray, textFile } = require('./src/logFileHelpers');
 
 /**
  * Returns promise of hourly security camera activity recorded for given day of week (0-6)
@@ -10,18 +9,14 @@ const { textFile } = require('./src/textFile');
 function activityTable(day) {
     return new Promise((resolve, reject) => {
         textFile('camera_logs.txt')
-        .then(file => Promise.resolve(fileToArray(file)))
-        .then(array => Promise.all(array.map(
-            fileName => {
-                return textFile(`weekly_logs/${fileName}`);
-            }
-        )))
-        .then(weeklyLogFiles => 
-            Promise.resolve(weeklyLogFiles.map(fileContents => {
-                return fileToArray(fileContents);
-            }))
-        )
-        .then(logs => {        
+        .then(logFileNames_year => Promise.all(listStringToArray(logFileNames_year).map(fileName => {
+            return textFile(`weekly_logs/${fileName}`);
+        })))
+        .then(logs_year => {
+            logs = logs_year.map(timeStampList_week => {
+                return listStringToArray(timeStampList_week);
+            });
+
             const hourlyActivity = Array(24).fill(0);
 
             for (const log of logs) {
