@@ -9,11 +9,13 @@ const { listStringToArray, textFile } = require('./src/logFileHelpers');
 function activityTable(day) {
     return new Promise((resolve, reject) => {
         textFile('camera_logs.txt')
-        .then(logManifest => Promise.all(listStringToArray(logManifest).map(logFileName => {
-            return textFile(`weekly_logs/${logFileName}`);
-        })))
+        .then(logManifest => {
+            const weeklyLogPromises = listStringToArray(logManifest)
+                .map(logFileName => textFile(`weekly_logs/${logFileName}`));
+            return Promise.all(weeklyLogPromises);
+        })
         .then(timeStampLists => {
-            logs = timeStampLists.map(timeStampList_week => {
+            const logs = timeStampLists.map(timeStampList_week => {
                 return listStringToArray(timeStampList_week);
             });
 
