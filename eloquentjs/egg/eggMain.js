@@ -47,3 +47,5 @@ let program =
     print(sum(array(1, 2, 3))))`;
 
 run(program);
+
+// output --> 6
