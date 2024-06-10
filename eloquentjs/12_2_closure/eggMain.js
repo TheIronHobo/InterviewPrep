@@ -56,3 +56,4 @@ console.log(f(4)(5))
 // 3. If a node in the evaluation is of name fun, then downstream node evaluations should be in the context of an inner scope
 // 4. The line `let localScope = Object.create(topScope)` creates a new inner scope for the function environment using topScope (or scope ultimately derived from topScope) as a prototype for downtree returns
 // 5. The `localScope` will contain global vars/functions inherited from the surrounding scope but those vars/functions may be overridden locally in accordance with typical prototype behaviour
+// 6. A consequence of the design as-is is that it is not currently possible to change the value of outer-scope variable from within an inner scope. (this is a later exercise)
