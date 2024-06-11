@@ -1,6 +1,6 @@
-let cat = document.querySelector("#cat");
-let hat = document.querySelector("#hat");
-let wand = document.querySelector("#wand");
+const cat = document.querySelector("#cat");
+const hat = document.querySelector("#hat");
+const wand = document.querySelector("#wand");
 
 let angle = 0;
 let lastTime = null;
