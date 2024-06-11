@@ -11,5 +11,4 @@ class Vector2 {
     sub(input) {
         return new Vector2(this.x - input.x, this.y - input.y)
     }
-
 }
