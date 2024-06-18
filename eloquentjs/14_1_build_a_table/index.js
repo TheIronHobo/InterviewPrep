@@ -15,14 +15,16 @@ function generateObjectTable(inputArray) {
     const table = document.createElement('table');
 
     const headerRow = document.createElement('tr');
-    Object.getOwnPropertyNames(inputArray[0]).forEach(propertyName => {
+
+    for (const propertyName of Object.getOwnPropertyNames(inputArray[0])) {
         const cell = document.createElement('th')
         cell.innerHTML = propertyName;
         headerRow.appendChild(cell);
-    });
+    }
+
     table.appendChild(headerRow);
 
-    inputArray.forEach(entry => {
+    for (const entry of inputArray) {
         const row = document.createElement('tr');
 
         for (const [key, value] of Object.entries(entry)) {
@@ -35,7 +37,7 @@ function generateObjectTable(inputArray) {
         }
 
         table.appendChild(row);
-    });
+    }
 
     return table;
 }
