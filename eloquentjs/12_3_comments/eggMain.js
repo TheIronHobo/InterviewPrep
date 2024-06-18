@@ -39,13 +39,14 @@ function run(program) {
 let program = 
 `do(define(f, fun(a, fun(b, +(a, b)))),
    # we are printing below
-    print(f(4)(5))) # we are printing left
-   # we are printing above`;
+    print(f(4)(5))) # we are printing to the left
+   # we are printing above
+   # trailing comment`;
 
-//run(program);
+run(program);
 // output --> 9
 
-//console.log(parse("# hello\nx"));
+console.log(parse("# hello\nx"));
 // → {type: "word", name: "x"}
 
 console.log(parse("a # one\n   # two\n()"));

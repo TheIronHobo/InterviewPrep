@@ -2,31 +2,22 @@ function skipSpace(string) {
     let first = string.search(/\S/);
     return (first === -1) ? "" : string.slice(first);
 }
+
 function skipComment(string) {
     if (string[0] !== '#') {
         return string;
     }
-    let reg = /(\s*#.*\n\s*)+?/d;
-    let endOfCommentsIndex = reg.exec(string).indices[0][1];
-    console.log()
-    console.log(reg.exec(string))
+    let regexp = /(\s*#+.*)+\s*/d;
+    let endOfCommentsIndex = regexp.exec(string).indices[0][1];
     return (endOfCommentsIndex === -1) ? "" : string.slice(endOfCommentsIndex);
 }
 
-function cleanProgram(string) {
-    let output = skipSpace(string);
-    output = skipComment(output);
-    output = skipSpace(output);
-   // output = skipSpace(string);
-   // output = skipComment(output);
-    console.log('output')
-    console.log(`[${output}]`)
-    console.log()
-    return output;
+function cleanProgramString(string) {
+    return skipComment(skipSpace(string));
 }
 
 function parseExpression(program) {
-    program = cleanProgram(program);
+    program = cleanProgramString(program);
 
     let match, expr;
     if (match = /^"([^"]*)"/.exec(program)) { // Matches Egg strings
@@ -43,21 +34,21 @@ function parseExpression(program) {
 }
 
 function parseApply(expr, program) {
-    program = cleanProgram(program);
+    program = cleanProgramString(program);
 
     expressionIsApplication = program[0] === "(";
 
     if (expressionIsApplication) {
-        program = cleanProgram(program.slice(1));
+        program = cleanProgramString(program.slice(1));
         expr = { type: "apply", operator: expr, args: [] };
 
         while (program[0] !== ")") {
             let arg = parseExpression(program);
             expr.args.push(arg.expr);
-            program = cleanProgram(arg.rest);
+            program = cleanProgramString(arg.rest);
 
             if (program[0] === ",") {
-                program = cleanProgram(program.slice(1));
+                program = cleanProgramString(program.slice(1));
             } else if (program[0] !== ")") {
                 throw new SyntaxError("Expected ',' or ')'");
             }
@@ -73,7 +64,7 @@ function parseApply(expr, program) {
 function parse(program) {
     let { expr, rest } = parseExpression(program);
 
-    parsingError = cleanProgram(rest).length > 0;
+    parsingError = cleanProgramString(rest).length > 0;
 
     if (parsingError) {
         throw new SyntaxError("Unexpected text after program");
