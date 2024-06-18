@@ -2,12 +2,12 @@ function byTagName(node, tagName) {
     const matches = [];
 
     function searchChildren(node) {
-        Array.from(node.children).forEach(child => {
+        for (let child of node.children) {
             if (child.nodeName.toLowerCase() === tagName.toLowerCase()) {
                 matches.push(child);
             }
             searchChildren(child);
-        });
+        }
     }
 
     searchChildren(node);
