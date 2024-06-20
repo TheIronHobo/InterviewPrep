@@ -1,33 +1,40 @@
-let balloonSize = 25;
 let balloon = document.getElementById("balloon");
-console.log(`w: ${window.innerWidth} h: ${window.innerHeight}`)
 
+let balloonSize = 1;
+let explosionThreshold = 18;
 
 let timeout;
-window.addEventListener('keydown', event => {
+
+let balloonHandler = event => {
     if (event.key === 'ArrowUp') {
         clearTimeout(timeout);
-        timeout = setTimeout(() => balloonSize *= 1.1, 50);
-        balloon.style.fontSize = `${balloonSize}px`
 
-        let xPos = window.innerWidth/2 - balloonSize/2;
-        let yPos = window.innerHeight/2 - balloonSize/2;
-        console.log(`x: ${xPos} y: ${yPos}`)
-       // balloon.style.top = `${xPos}px`
-       // balloon.style.left = `${yPos}px`
+        timeout = setTimeout(() =>{
+            if (balloonSize > explosionThreshold) {
+                explosion();
+                return;
+            }
+            balloonSize *= 1.1;
+            balloon.style.fontSize = `${balloonSize}em`;
+        }, 50);
+
         event.preventDefault();
     } else if (event.key === 'ArrowDown') {
         clearTimeout(timeout);
-        timeout = setTimeout(() => balloonSize *= 0.9, 50);
-        balloon.style.fontSize = `${balloonSize}px`
-        let xPos = window.innerWidth/2 - balloonSize/2;
-        let yPos = window.innerHeight/2 - balloonSize/2;
-        //console.log('width' + window.innerWidth)
-        console.log(`x: ${xPos} y: ${yPos}`)
-        balloon.style.top = `${xPos}px`
-        balloon.style.left = `${yPos}px`
-        console.log("top fetch" + balloon.style.top)
+
+        timeout = setTimeout(() =>{
+            balloonSize *= 0.9;
+            balloon.style.fontSize = `${balloonSize}em`;
+        }, 50);
+
         event.preventDefault();
     }
-});
+}
 
+window.addEventListener('keydown', balloonHandler);
+
+function explosion() {
+    console.log("Pop!")
+    balloon.textContent = '💥';
+    window.removeEventListener('keydown', balloonHandler)
+}
