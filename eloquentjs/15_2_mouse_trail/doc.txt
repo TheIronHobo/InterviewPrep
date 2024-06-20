@@ -1,6 +1,5 @@
-little rockets getting launched that try and home in on the mouse.
+I'm thinking of pivoting to a snake game.
 
-rocket class utilizing pid controller
+We create a snake class/object that spawns new divs when it gets apple emojis.
 
-vector class
-
+We should start be generating a grid of square divs that populates the entire screen
