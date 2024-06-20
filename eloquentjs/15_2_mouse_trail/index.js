@@ -77,6 +77,7 @@ function grainAnimation(timeData) {
 
             sandContainer.removeChild(grain);
             landedSandContainer.appendChild(grain);
+            
             continue;
         }
 
