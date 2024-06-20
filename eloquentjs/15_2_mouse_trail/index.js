@@ -58,9 +58,19 @@ function grainAnimation(timeData) {
         grain.position = grain.position.add(grain.velocity);
 
         let heightMapIndex = Math.floor(grain.position.x / grainSize);
-        let landedSandHeight = floorHeight - heightMap[heightMapIndex] * grainSize;
 
-        if (grain.position.y > floorHeight || grain.position.y > landedSandHeight) {
+        // Adjusts final grain position to minimize vertical stacking
+        if (heightMapIndex > 0 && heightMapIndex < heightMap.length - 2) {
+            if (heightMap[heightMapIndex] > heightMap[heightMapIndex - 1]) {
+                heightMapIndex--;
+            } else if (heightMap[heightMapIndex] > heightMap[heightMapIndex + 1]) {
+                heightMapIndex++;
+            }
+        }
+
+        const sandElevation = floorHeight - heightMap[heightMapIndex] * grainSize;
+
+        if (grain.position.y > floorHeight || grain.position.y > sandElevation) {
             heightMap[heightMapIndex]++;
 
             grain.style.transform = `translate(${heightMapIndex * grainSize}px, ${floorHeight - heightMap[heightMapIndex] * grainSize}px)`;
