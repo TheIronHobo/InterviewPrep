@@ -1,5 +1,0 @@
-I'm thinking of pivoting to a snake game.
-
-We create a snake class/object that spawns new divs when it gets apple emojis.
-
-We should start be generating a grid of square divs that populates the entire screen

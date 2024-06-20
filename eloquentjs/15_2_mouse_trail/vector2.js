@@ -4,12 +4,16 @@ class Vector2 {
         this.y = y;
     }
 
-    plus(input) {
-        return new Vec(this.x + input.x, this.y + input.y)
+    add(input) {
+        return new Vector2(this.x + input.x, this.y + input.y)
     }
 
-    minus(input) {
-        return new Vec(this.x - input.x, this.y - input.y)
+    sub(input) {
+        return new Vector2(this.x - input.x, this.y - input.y)
+    }
+
+    mult(input) {
+        return new Vector2(this.x * input, this.y * input);
     }
 
     dot(input) {
@@ -17,12 +21,17 @@ class Vector2 {
     }
 
     normalized() {
-        return new Vec(this.x / this.length, this.y / this.length);
+        return new Vector2(this.x / this.length, this.y / this.length);
     }
 
     get length() {
         return Math.sqrt(this.x * this.x + this.y * this.y);
     }
+
+    static Zero() {
+        return new Vector2();
+    }
 }
+
 
 export { Vector2 }
