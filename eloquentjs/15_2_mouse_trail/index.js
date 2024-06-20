@@ -1,66 +1,75 @@
-import { Vector2 } from "./vector2.js";
-import { animator } from "./animator.js"; 
+import { Vector2 } from "./src/vector2.js";
+import { animator } from "./src/animator.js"; 
 
-let middleScreen = new Vector2(window.innerWidth/2, window.innerHeight/2)
+// Simulation parameters
+const grainSize = 10;
+const gravityAcceleration = new Vector2(0, 0.2);
+const floorHeight = window.innerHeight * (2 / 3);
+
+// Heightmap construction
+const heightMapLength = Math.floor(window.innerWidth / grainSize)
+const heightMap = Array(heightMapLength);
+heightMap.fill(0);
+
+// Grain divs
+const sandContainer = document.getElementById("sand-container");
+const landedSandContainer = document.getElementById("landed-sand-container");
+
+// Helper functions
+const fetchTime = () => new Date().getTime();
+const randomRange = (min, max) => Math.random() * (max - min) + min;
+
+// Time vars
+const grainEmitterTimeout = 2;
+let lastTime;
+
+// Begin animator loop
+animator(grainAnimation);
 
 window.addEventListener("mousemove", event => {
-    let mousePosition = new Vector2(event.clientX, event.clientY);
-    let sparkleElement = document.createElement('div');
-    sparkleElement.className = "sparkle";
-    sparkleElement.ttl = 1000;
-    sparkleElement.position = mousePosition;
-    let randomVelocity = new Vector2(Math.random()*2-1, Math.random()*2-1).mult(10);
-    sparkleElement.velocity = randomVelocity;
-    console.log
-    document.body.appendChild(sparkleElement);
-    // sparkles.push(new Sparkler(sparkleElement, mousePosition, randomVelocity))
+    if (fetchTime() - lastTime < grainEmitterTimeout) {
+        return;
+    }
+    lastTime = fetchTime();
+
+    const mousePosition = new Vector2(event.clientX, event.clientY);
+    const randomVelocity = new Vector2(randomRange(-5, 5), randomRange(-20, 0));
+
+    const grain = document.createElement('div');
+
+    grain.className = "grain";
+    grain.position = mousePosition;
+    grain.velocity = randomVelocity;
+
+    grain.style.width = `${grainSize}px`;
+    grain.style.height = `${grainSize}px`;
+    grain.style.backgroundColor = `rgb(${randomRange(155, 175)}, ${randomRange(155, 175)}, ${randomRange(125, 155)})`;
+
+    sandContainer.appendChild(grain);
 });
 
+function grainAnimation(timeData) {
+    const [_, deltaTime] = timeData;
 
-function sparkAnimation(timeData) {
-    let [time, deltaTime] = timeData;
+    const sand = sandContainer.getElementsByClassName("grain");
 
-    let sparkles = document.getElementsByClassName("sparkle");
+    for (const grain of sand) {
+        grain.velocity = grain.velocity.add(gravityAcceleration.mult(deltaTime));
+        grain.position = grain.position.add(grain.velocity);
 
-    for (let sparkle of sparkles) {
-        sparkle.position = sparkle.position.add(sparkle.velocity);
-        sparkle.style.transform = `translate(${sparkle.position.x}px, ${sparkle.position.y}px)`;
-        sparkle.ttl -= deltaTime;
-        if (sparkle.ttl < 0) {
-            document.body.removeChild(sparkle);
+        let heightMapIndex = Math.floor(grain.position.x / grainSize);
+        let landedSandHeight = floorHeight - heightMap[heightMapIndex] * grainSize;
+
+        if (grain.position.y > floorHeight || grain.position.y > landedSandHeight) {
+            heightMap[heightMapIndex]++;
+
+            grain.style.transform = `translate(${heightMapIndex * grainSize}px, ${floorHeight - heightMap[heightMapIndex] * grainSize}px)`;
+
+            sandContainer.removeChild(grain);
+            landedSandContainer.appendChild(grain);
+            continue;
         }
+
+        grain.style.transform = `translate(${grain.position.x}px, ${grain.position.y}px)`;
     }
-
-    // let sparklers = [];
-    // if (state == null) {
-    //     let sparklers = [];
-    //     for (let i = 0; i < 20; i++) {  
-    //         sparklers.push(new Sparkler())
-    //     }
-    //     return state = {
-    //         state.sparklers = sparklers;
-    //     }        
-    // }
-
-    // for (let sparklers of state.sparklers) {
-    //     sparkler
-    // }
-   // sparklers = state.sparklers;
-
 }
-
-animator(sparkAnimation);
-
-
-
-// for (let i = 0; i < divisions; i++) {
-//     let element = document.createElement('div');
-//     element.style.backgroundColor = 'red';
-//     element.style.border = 'solid';
-//     element.style.borderColor = 'blue'
-//     element.style.top = '20px'
-//     element.style.left = `${divisions}`
-//     element.style.width = '20px';
-//     element.style.height = '20px';
-//     document.body.appendChild(element);
-// }

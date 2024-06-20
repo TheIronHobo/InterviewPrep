@@ -27,10 +27,6 @@ class Vector2 {
     get length() {
         return Math.sqrt(this.x * this.x + this.y * this.y);
     }
-
-    static Zero() {
-        return new Vector2();
-    }
 }
 
 
